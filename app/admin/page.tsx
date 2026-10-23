@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import { 
   Building2, 
   ShieldCheck, 
@@ -15,7 +16,8 @@ import {
   Activity, 
   Server,
   Lock,
-  Bot
+  Bot,
+  Scale
 } from "lucide-react";
 
 interface Metrics {
@@ -193,6 +195,13 @@ export default function AdminPage() {
             <span>{botWaveLoading ? "Injecting Attack..." : "Simulate 20-Claim Bot Wave"}</span>
           </button>
 
+          <Link
+            href="/admin/adjudicate"
+            className="px-3.5 py-2.5 bg-cyan-950/80 hover:bg-cyan-900/80 border border-cyan-800/80 text-cyan-200 text-xs font-bold rounded-xl transition flex items-center gap-1.5 shadow-sm"
+          >
+            <Scale className="w-3.5 h-3.5 text-cyan-400" />
+            <span>Adjudication Console</span>
+          </Link>
           <button
             onClick={loadMetrics}
             className="p-2.5 bg-zinc-900 border border-zinc-800 hover:bg-zinc-800 text-zinc-300 rounded-xl transition flex items-center gap-1.5 text-xs font-semibold"

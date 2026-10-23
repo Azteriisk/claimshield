@@ -19,6 +19,11 @@ export interface Settlement {
   officialClaimUrl: string;
   eligibleDomains: string[];
   description: string;
+  docketNumber?: string;
+  courtDistrict?: string;
+  mdlNumber?: string;
+  approvalStage?: "PRELIMINARY" | "FINAL" | "UNKNOWN";
+  source?: string;
 }
 
 export interface Claimant {
@@ -72,13 +77,15 @@ export interface IdentityDispute {
   appellantDob: string;
   appellantSsnLast4: string;
   appellantPayoutAddress: string;
-  status: "FROZEN_PENDING_STEP_UP" | "RESOLVED_APPELLANT_WON" | "REJECTED";
+  status: "FROZEN_PENDING_STEP_UP" | "RESOLVED_APPELLANT_WON" | "REJECTED" | "SUPPLEMENTARY_PROOF_REQUESTED" | "IMPOSTER_DISQUALIFIED";
   stepUpLivenessScore?: number;
   stepUpProofType?: "NFC_PASSPORT" | "DYNAMIC_LIVENESS_VIDEO";
   fraudulentPayoutBlacklisted?: string;
   createdAt: string;
   resolvedAt?: string;
   adjudicationNotes?: string;
+  escrowAmount?: number;
+  settlementId?: string;
 }
 
 export interface BreachRecord {
@@ -89,6 +96,14 @@ export interface BreachRecord {
   exposedData: string[];
   description: string;
   matchingSettlementId?: string;
+  stateSource?: "CA" | "ME" | "TX" | "MULTI_STATE";
+  affectedRecords?: number;
+  dataCategories?: {
+    hasSSN: boolean;
+    hasFinancial: boolean;
+    hasBiometric: boolean;
+    hasHealth: boolean;
+  };
 }
 
 // ==========================================
@@ -319,6 +334,16 @@ class DataStore {
         if (parsed.claims) this.claims = parsed.claims;
         if (parsed.disputes) this.disputes = parsed.disputes;
         if (parsed.blacklist) this.blacklist = new Set(parsed.blacklist);
+        if (parsed.settlements && Array.isArray(parsed.settlements)) {
+          const loadedIds = new Set(parsed.settlements.map((s: Settlement) => s.id));
+          const unmentioned = INITIAL_SETTLEMENTS.filter(s => !loadedIds.has(s.id));
+          this.settlements = [...parsed.settlements, ...unmentioned];
+        }
+        if (parsed.breaches && Array.isArray(parsed.breaches)) {
+          const loadedIds = new Set(parsed.breaches.map((b: BreachRecord) => b.id));
+          const unmentioned = INITIAL_BREACH_RECORDS.filter(b => !loadedIds.has(b.id));
+          this.breaches = [...parsed.breaches, ...unmentioned];
+        }
       }
     } catch (e) {
       console.warn("Could not load store from disk, initializing fresh", e);
@@ -335,7 +360,9 @@ class DataStore {
         aliases: this.aliases,
         claims: this.claims,
         disputes: this.disputes,
-        blacklist: Array.from(this.blacklist)
+        blacklist: Array.from(this.blacklist),
+        settlements: this.settlements,
+        breaches: this.breaches
       };
       fs.writeFileSync(STORAGE_FILE, JSON.stringify(state, null, 2), "utf-8");
     } catch (e) {
@@ -435,9 +462,31 @@ class DataStore {
       isDemo: true,
       submittedAt: new Date(Date.now() - 86400000 * 4).toISOString()
     });
+
+    // Seeded Contested Dispute: Robert Miller vs Syndicate Imposter
+    this.disputes.push({
+      id: "disp-robert-att-2024",
+      contestedPersonHash: robertHash,
+      incumbentClaimantId: robertFake.id,
+      appellantEmail: "robert.miller.real@gmail.com",
+      appellantFirstName: "Robert",
+      appellantLastName: "Miller",
+      appellantDob: "1985-11-20",
+      appellantSsnLast4: "8899",
+      appellantPayoutAddress: "robert.miller.real@gmail.com",
+      status: "FROZEN_PENDING_STEP_UP",
+      stepUpLivenessScore: 0.998,
+      stepUpProofType: "DYNAMIC_LIVENESS_VIDEO",
+      settlementId: "sett-att-2024",
+      escrowAmount: 45.0,
+      createdAt: new Date(Date.now() - 3600000 * 4).toISOString(),
+      adjudicationNotes: "Contested claim submitted with sworn 28 U.S.C. 1746 declaration and NIST Level 3 biometric liveness verification."
+    });
   }
 
   public resetSimulationFixtures() {
+    this.settlements = [...INITIAL_SETTLEMENTS];
+    this.breaches = [...INITIAL_BREACH_RECORDS];
     this.claimants = [];
     this.aliases = [];
     this.claims = [];
@@ -522,8 +571,58 @@ class DataStore {
     return this.settlements.find(s => s.id === id);
   }
 
+  public getSettlementByDocket(docketNumber: string): Settlement | undefined {
+    return this.settlements.find(
+      s => s.docketNumber?.toLowerCase() === docketNumber.toLowerCase()
+    );
+  }
+
+  public upsertSettlement(settlement: Settlement): { settlement: Settlement; isNew: boolean; updatedDeadline: boolean } {
+    const existingIdx = this.settlements.findIndex(
+      s => s.id === settlement.id || (settlement.docketNumber && s.docketNumber && s.docketNumber.toLowerCase() === settlement.docketNumber.toLowerCase())
+    );
+
+    if (existingIdx !== -1) {
+      const existing = this.settlements[existingIdx];
+      const updatedDeadline = existing.claimDeadline !== settlement.claimDeadline;
+      const updated: Settlement = {
+        ...existing,
+        ...settlement,
+        id: existing.id // Preserve canonical settlement ID
+      };
+      this.settlements[existingIdx] = updated;
+      this.saveToDisk();
+      return { settlement: updated, isNew: false, updatedDeadline };
+    } else {
+      this.settlements.unshift(settlement);
+      this.saveToDisk();
+      return { settlement, isNew: true, updatedDeadline: false };
+    }
+  }
+
   public getBreaches(): BreachRecord[] {
     return this.breaches;
+  }
+
+  public upsertBreach(breach: BreachRecord): { breach: BreachRecord; isNew: boolean } {
+    const existingIdx = this.breaches.findIndex(
+      b => b.id === breach.id || (b.entityName.toLowerCase() === breach.entityName.toLowerCase() && b.domain.toLowerCase() === breach.domain.toLowerCase())
+    );
+
+    if (existingIdx !== -1) {
+      const updated: BreachRecord = {
+        ...this.breaches[existingIdx],
+        ...breach,
+        id: this.breaches[existingIdx].id
+      };
+      this.breaches[existingIdx] = updated;
+      this.saveToDisk();
+      return { breach: updated, isNew: false };
+    } else {
+      this.breaches.unshift(breach);
+      this.saveToDisk();
+      return { breach, isNew: true };
+    }
   }
 
   public getClaimants(): Claimant[] {

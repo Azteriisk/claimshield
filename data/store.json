@@ -12,7 +12,7 @@
       "lockedPayoutAddress": "janedoe.real@gmail.com",
       "lockedPayoutHash": "eacfdcfbf557285314751b5399afc54a47cc9b4265b61f80edfbdfc05923339f",
       "isDemo": true,
-      "createdAt": "2026-10-18T04:50:25.251Z"
+      "createdAt": "2026-10-18T05:17:54.580Z"
     },
     {
       "id": "claimant-robert-hijacked",
@@ -26,7 +26,7 @@
       "lockedPayoutAddress": "burner_payout_syndicate99@tempmail.io",
       "lockedPayoutHash": "1fcd370d17a6107b224b155e6d686b7c8412a72ddbc0f6ed811c5a35f65848e8",
       "isDemo": true,
-      "createdAt": "2026-10-21T04:50:25.252Z"
+      "createdAt": "2026-10-21T05:17:54.580Z"
     }
   ],
   "aliases": [
@@ -36,7 +36,7 @@
       "aliasType": "EMAIL",
       "aliasValue": "janedoe.real@gmail.com",
       "isVerified": true,
-      "verifiedAt": "2026-10-18T04:50:25.251Z"
+      "verifiedAt": "2026-10-18T05:17:54.580Z"
     },
     {
       "id": "alias-robert-fake",
@@ -65,7 +65,7 @@
       "ipAddress": "45.33.32.156",
       "isDatacenter": true,
       "isDemo": true,
-      "submittedAt": "2026-10-21T04:50:25.252Z"
+      "submittedAt": "2026-10-21T05:17:54.580Z"
     },
     {
       "id": "claim-jane-clean-1",
@@ -80,9 +80,485 @@
       "ipAddress": "98.210.14.88",
       "isDatacenter": false,
       "isDemo": true,
-      "submittedAt": "2026-10-19T04:50:25.252Z"
+      "submittedAt": "2026-10-19T05:17:54.580Z"
     }
   ],
-  "disputes": [],
-  "blacklist": []
+  "disputes": [
+    {
+      "id": "disp-robert-att-2024",
+      "contestedPersonHash": "e16565cb692f1380f7f105d6727f20b2afbca920506a0a06f9d829757e8d1da3",
+      "incumbentClaimantId": "claimant-robert-hijacked",
+      "appellantEmail": "robert.miller.real@gmail.com",
+      "appellantFirstName": "Robert",
+      "appellantLastName": "Miller",
+      "appellantDob": "1985-11-20",
+      "appellantSsnLast4": "8899",
+      "appellantPayoutAddress": "robert.miller.real@gmail.com",
+      "status": "FROZEN_PENDING_STEP_UP",
+      "stepUpLivenessScore": 0.998,
+      "stepUpProofType": "DYNAMIC_LIVENESS_VIDEO",
+      "settlementId": "sett-att-2024",
+      "escrowAmount": 45,
+      "createdAt": "2026-10-23T01:17:54.580Z",
+      "adjudicationNotes": "Contested claim submitted with sworn 28 U.S.C. 1746 declaration and NIST Level 3 biometric liveness verification."
+    }
+  ],
+  "blacklist": [],
+  "settlements": [
+    {
+      "id": "sett-court-mdl-no-3118",
+      "caseName": "In re Ascension Health System Patient Data Security Litigation",
+      "defendant": "Ascension Health Alliance",
+      "administratorName": "Simpluris Inc.",
+      "incidentYear": 2026,
+      "claimDeadline": "2027-02-15",
+      "status": "OPEN",
+      "estimatedBasePayout": 60,
+      "maxDocumentedLoss": 7500,
+      "officialClaimUrl": "/portal/demo-settlement?id=sett-court-mdl-no-3118",
+      "eligibleDomains": [
+        "ascension.org"
+      ],
+      "description": "ORDER preliminarily approving Nationwide Healthcare Class Settlement. Simpluris Inc. appointed as Settlement Administrator. Claims submission deadline scheduled for 2027-02-15. Base payout authorized at $60.00 with medical monitoring tier and up to $7,500.00 documented out-of-pocket loss compensation.",
+      "docketNumber": "MDL No. 3118",
+      "courtDistrict": "E.D. Mo.",
+      "mdlNumber": "MDL No. 3118",
+      "approvalStage": "PRELIMINARY",
+      "source": "courtlistener_recap"
+    },
+    {
+      "id": "sett-court-case-no-1-24-cv-04512-jmf",
+      "caseName": "Doe et al v. Snowflake Inc. and Affiliated Cloud Entities",
+      "defendant": "Snowflake Inc.",
+      "administratorName": "Epiq Systems Inc.",
+      "incidentYear": 2024,
+      "claimDeadline": "2027-01-31",
+      "status": "OPEN",
+      "estimatedBasePayout": 40,
+      "maxDocumentedLoss": 4000,
+      "officialClaimUrl": "/portal/demo-settlement?id=sett-court-case-no-1-24-cv-04512-jmf",
+      "eligibleDomains": [
+        "snowflake.com"
+      ],
+      "description": "ORDER granting Joint Application for Preliminary Approval of Data Exfiltration Class Settlement. Court approves Epiq Systems Inc. as Class Notice and Claims Administrator. Setting claims submission deadline of 2027-01-31. Estimated claimant award is $40.00 base payout, max documented losses $4,000.00.",
+      "docketNumber": "Case No. 1:24-cv-04512-JMF",
+      "courtDistrict": "S.D.N.Y.",
+      "approvalStage": "PRELIMINARY",
+      "source": "courtlistener_recap"
+    },
+    {
+      "id": "sett-court-mdl-no-3131",
+      "caseName": "In re National Public Data Customer Information Breach Litigation",
+      "defendant": "Jerico Pictures Inc. d/b/a National Public Data",
+      "administratorName": "Kroll Settlement Administration",
+      "incidentYear": 2026,
+      "claimDeadline": "2026-11-20",
+      "status": "FINAL_APPROVAL_PENDING",
+      "estimatedBasePayout": 75,
+      "maxDocumentedLoss": 10000,
+      "officialClaimUrl": "/portal/demo-settlement?id=sett-court-mdl-no-3131",
+      "eligibleDomains": [
+        "nationalpublicdata.com"
+      ],
+      "description": "FINAL ORDER AND JUDGMENT granting Motion for Final Approval of Class Action Settlement Agreement. Confirms appointment of Kroll Settlement Administration as Claims Administrator. Approves pro-rata distribution with estimated cash compensation of $75.00 and documented losses up to $10,000.00. Final claims deadline fixed as 2026-11-20.",
+      "docketNumber": "MDL No. 3131",
+      "courtDistrict": "S.D. Fla.",
+      "mdlNumber": "MDL No. 3131",
+      "approvalStage": "FINAL",
+      "source": "courtlistener_recap"
+    },
+    {
+      "id": "sett-court-mdl-no-3125",
+      "caseName": "In re CDK Global Dealer Services Cyber Breach Litigation",
+      "defendant": "CDK Global LLC",
+      "administratorName": "Angeion Group",
+      "incidentYear": 2026,
+      "claimDeadline": "2026-12-01",
+      "status": "OPEN",
+      "estimatedBasePayout": 50,
+      "maxDocumentedLoss": 5000,
+      "officialClaimUrl": "/portal/demo-settlement?id=sett-court-mdl-no-3125",
+      "eligibleDomains": [
+        "cdkglobal.com",
+        "cdk.com"
+      ],
+      "description": "MEMORANDUM OPINION AND ORDER granting Plaintiffs' Motion for Preliminary Approval of Nationwide Class Action Settlement. Approves $125M common fund. Approves Notice Plan and designates Angeion Group as Settlement Administrator. Establishes claim deadline of 2026-12-01. Base tier cash payment estimated at $50.00 with documented loss reimbursement up to $5,000.00.",
+      "docketNumber": "MDL No. 3125",
+      "courtDistrict": "N.D. Ill.",
+      "mdlNumber": "MDL No. 3125",
+      "approvalStage": "PRELIMINARY",
+      "source": "courtlistener_recap"
+    },
+    {
+      "id": "sett-tm-2024",
+      "caseName": "In re Ticketmaster / Live Nation Customer Data Breach Litigation",
+      "defendant": "Live Nation Entertainment / Ticketmaster LLC",
+      "administratorName": "Epiq Systems Inc.",
+      "incidentYear": 2024,
+      "claimDeadline": "2026-12-15",
+      "status": "OPEN",
+      "estimatedBasePayout": 37.5,
+      "maxDocumentedLoss": 2500,
+      "officialClaimUrl": "/portal/demo-settlement?id=sett-tm-2024",
+      "eligibleDomains": [
+        "ticketmaster.com",
+        "livenation.com"
+      ],
+      "description": "Compromised barcodes, payment details, names, and purchase histories affecting 560M accounts globally."
+    },
+    {
+      "id": "sett-att-2024",
+      "caseName": "AT&T Customer Data Incident Class Action Settlement",
+      "defendant": "AT&T Inc.",
+      "administratorName": "Kroll Settlement Administration",
+      "incidentYear": 2024,
+      "claimDeadline": "2026-11-30",
+      "status": "OPEN",
+      "estimatedBasePayout": 45,
+      "maxDocumentedLoss": 5000,
+      "officialClaimUrl": "/portal/demo-settlement?id=sett-att-2024",
+      "eligibleDomains": [
+        "att.com",
+        "att.net",
+        "sbcglobal.net"
+      ],
+      "description": "Exposure of 73M current and former account records including SSNs, call records, and customer security PINs."
+    },
+    {
+      "id": "sett-23andme-2023",
+      "caseName": "23andMe Genetic Data Security Breach Litigation",
+      "defendant": "23andMe Holding Co.",
+      "administratorName": "Angeion Group",
+      "incidentYear": 2023,
+      "claimDeadline": "2026-10-31",
+      "status": "OPEN",
+      "estimatedBasePayout": 100,
+      "maxDocumentedLoss": 10000,
+      "officialClaimUrl": "/portal/demo-settlement?id=sett-23andme-2023",
+      "eligibleDomains": [
+        "23andme.com"
+      ],
+      "description": "Credential stuffing attack leaking genetic ancestry trees, health relationship tags, and sensitive family heritage."
+    },
+    {
+      "id": "sett-change-2024",
+      "caseName": "Change Healthcare / UnitedHealth Ransomware Settlement",
+      "defendant": "UnitedHealth Group / Change Healthcare",
+      "administratorName": "JND Legal Administration",
+      "incidentYear": 2024,
+      "claimDeadline": "2027-01-15",
+      "status": "OPEN",
+      "estimatedBasePayout": 50,
+      "maxDocumentedLoss": 7500,
+      "officialClaimUrl": "/portal/demo-settlement?id=sett-change-2024",
+      "eligibleDomains": [
+        "changehealthcare.com",
+        "optum.com"
+      ],
+      "description": "Massive medical claims clearinghouse cyberattack exposing diagnoses, prescriptions, and insurance IDs."
+    },
+    {
+      "id": "sett-roku-2024",
+      "caseName": "Roku Customer Account Security Breach Litigation",
+      "defendant": "Roku Inc.",
+      "administratorName": "Simpluris Inc.",
+      "incidentYear": 2024,
+      "claimDeadline": "2026-11-15",
+      "status": "OPEN",
+      "estimatedBasePayout": 25,
+      "maxDocumentedLoss": 1500,
+      "officialClaimUrl": "/portal/demo-settlement?id=sett-roku-2024",
+      "eligibleDomains": [
+        "roku.com"
+      ],
+      "description": "Credential stuffing compromising 591,000 accounts with unauthorized subscription purchases."
+    },
+    {
+      "id": "sett-moveit-2023",
+      "caseName": "In re MoveIT Transfer Customer Data Security Incident",
+      "defendant": "Progress Software Corporation",
+      "administratorName": "Epiq Systems Inc.",
+      "incidentYear": 2023,
+      "claimDeadline": "2026-12-31",
+      "status": "OPEN",
+      "estimatedBasePayout": 65,
+      "maxDocumentedLoss": 8000,
+      "officialClaimUrl": "/portal/demo-settlement?id=sett-moveit-2023",
+      "eligibleDomains": [
+        "progress.com",
+        "moveit.com"
+      ],
+      "description": "CL0P ransomware SQL injection affecting corporate and pension systems across 60M individuals."
+    },
+    {
+      "id": "sett-dell-2024",
+      "caseName": "Dell Customer Portal Data Incident Settlement",
+      "defendant": "Dell Technologies Inc.",
+      "administratorName": "Kroll Settlement Administration",
+      "incidentYear": 2024,
+      "claimDeadline": "2027-02-28",
+      "status": "OPEN",
+      "estimatedBasePayout": 30,
+      "maxDocumentedLoss": 2000,
+      "officialClaimUrl": "/portal/demo-settlement?id=sett-dell-2024",
+      "eligibleDomains": [
+        "dell.com"
+      ],
+      "description": "Scraped API database containing physical addresses, purchase orders, and customer service tags."
+    },
+    {
+      "id": "sett-tmobile-2023",
+      "caseName": "T-Mobile Customer Data Incident Class Action Settlement",
+      "defendant": "T-Mobile US Inc.",
+      "administratorName": "Kroll Settlement Administration",
+      "incidentYear": 2023,
+      "claimDeadline": "2026-10-30",
+      "status": "OPEN",
+      "estimatedBasePayout": 35,
+      "maxDocumentedLoss": 3000,
+      "officialClaimUrl": "/portal/demo-settlement?id=sett-tmobile-2023",
+      "eligibleDomains": [
+        "t-mobile.com",
+        "sprint.com"
+      ],
+      "description": "API exploit accessing names, billing addresses, phone numbers, and account line features."
+    }
+  ],
+  "breaches": [
+    {
+      "id": "breach-tx-automobile-club-of-southern-california-aaa-texas",
+      "entityName": "Automobile Club of Southern California / AAA Texas",
+      "domain": "aaa.com",
+      "breachDate": "2024-07-02",
+      "exposedData": [
+        "Full Name",
+        "Driver's License Number",
+        "Financial & Payment Information"
+      ],
+      "description": "Texas AG Consumer Protection breach filing affecting 85,000 Texas residents. Reported on 2024-08-14.",
+      "stateSource": "TX",
+      "affectedRecords": 850000,
+      "dataCategories": {
+        "hasSSN": false,
+        "hasFinancial": true,
+        "hasBiometric": false,
+        "hasHealth": false
+      }
+    },
+    {
+      "id": "breach-tx-ascension-health-alliance",
+      "entityName": "Ascension Health Alliance",
+      "domain": "ascension.org",
+      "breachDate": "2024-05-08",
+      "exposedData": [
+        "Social Security Number (SSN)",
+        "Medical & Health Records",
+        "Driver's License",
+        "Financial & Payment Information"
+      ],
+      "description": "Texas AG Consumer Protection breach filing affecting 450,000 Texas residents. Reported on 2024-06-12.",
+      "stateSource": "TX",
+      "affectedRecords": 5200000,
+      "dataCategories": {
+        "hasSSN": true,
+        "hasFinancial": true,
+        "hasBiometric": false,
+        "hasHealth": true
+      }
+    },
+    {
+      "id": "breach-me-prudential-financial-inc",
+      "entityName": "Prudential Financial, Inc.",
+      "domain": "prudential.com",
+      "breachDate": "2024-02-04",
+      "exposedData": [
+        "Social Security Number (SSN)",
+        "Driver's License Number",
+        "Medical & Health Records",
+        "Full Name"
+      ],
+      "description": "Official Maine AG breach notification affecting 2,532,681 nationwide individuals (3,115 Maine residents). Reported on 2024-03-29.",
+      "stateSource": "ME",
+      "affectedRecords": 2532681,
+      "dataCategories": {
+        "hasSSN": true,
+        "hasFinancial": false,
+        "hasBiometric": false,
+        "hasHealth": true
+      }
+    },
+    {
+      "id": "breach-me-omni-hotels-management-corporation",
+      "entityName": "Omni Hotels Management Corporation",
+      "domain": "omnihotels.com",
+      "breachDate": "2024-03-29",
+      "exposedData": [
+        "Full Legal Name",
+        "Financial & Payment Information"
+      ],
+      "description": "Official Maine AG breach notification affecting 3,526,450 nationwide individuals (5,420 Maine residents). Reported on 2024-04-18.",
+      "stateSource": "ME",
+      "affectedRecords": 3526450,
+      "dataCategories": {
+        "hasSSN": false,
+        "hasFinancial": true,
+        "hasBiometric": false,
+        "hasHealth": false
+      }
+    },
+    {
+      "id": "breach-ca-columbia-sportswear-company",
+      "entityName": "Columbia Sportswear Company",
+      "domain": "columbia.com",
+      "breachDate": "2024-04-12",
+      "exposedData": [
+        "Biometric Identifiers",
+        "Financial & Payment Information",
+        "Full Name",
+        "Customer Account Credentials"
+      ],
+      "description": "Compromised retail analytics vendor API leaking in-store biometric facial recognition verification templates and customer transaction data.",
+      "stateSource": "CA",
+      "affectedRecords": 1200000,
+      "dataCategories": {
+        "hasSSN": false,
+        "hasFinancial": true,
+        "hasBiometric": true,
+        "hasHealth": false
+      }
+    },
+    {
+      "id": "breach-ca-advance-auto-parts-inc",
+      "entityName": "Advance Auto Parts, Inc.",
+      "domain": "advanceautoparts.com",
+      "breachDate": "2024-05-23",
+      "exposedData": [
+        "Social Security Number (SSN)",
+        "Driver's License Number",
+        "Financial & Payment Information"
+      ],
+      "description": "Unauthorized third-party exfiltration of Snowflake customer cloud environment exposing applicant and employee databases.",
+      "stateSource": "CA",
+      "affectedRecords": 35000000,
+      "dataCategories": {
+        "hasSSN": true,
+        "hasFinancial": true,
+        "hasBiometric": false,
+        "hasHealth": false
+      }
+    },
+    {
+      "id": "breach-tm-2024",
+      "entityName": "Ticketmaster / Live Nation",
+      "domain": "ticketmaster.com",
+      "breachDate": "May 2024",
+      "exposedData": [
+        "Full Name",
+        "Email",
+        "Phone",
+        "Order Details",
+        "Partial Credit Card"
+      ],
+      "description": "Database dump hosted on ShinyHunters forum compromising 560M customer records.",
+      "matchingSettlementId": "sett-tm-2024"
+    },
+    {
+      "id": "breach-att-2024",
+      "entityName": "AT&T Customer Records",
+      "domain": "att.com",
+      "breachDate": "March 2024",
+      "exposedData": [
+        "Full Name",
+        "Social Security Number (SSN)",
+        "Passcode/PIN",
+        "Mailing Address"
+      ],
+      "description": "Historical data leak spanning 73M customer records posted to breach forums.",
+      "matchingSettlementId": "sett-att-2024"
+    },
+    {
+      "id": "breach-23andme-2023",
+      "entityName": "23andMe DNA & Heritage",
+      "domain": "23andme.com",
+      "breachDate": "October 2023",
+      "exposedData": [
+        "Genetic Ancestry",
+        "Health Profile",
+        "Full Name",
+        "Family Relationships"
+      ],
+      "description": "Targeted credential stuffing accessing user profiles and DNA Relatives network.",
+      "matchingSettlementId": "sett-23andme-2023"
+    },
+    {
+      "id": "breach-change-2024",
+      "entityName": "Change Healthcare",
+      "domain": "changehealthcare.com",
+      "breachDate": "February 2024",
+      "exposedData": [
+        "Medical Diagnoses",
+        "Insurance Policy #",
+        "SSN",
+        "Billing Info"
+      ],
+      "description": "BlackCat/ALPHV ransomware exfiltration of US nationwide health data.",
+      "matchingSettlementId": "sett-change-2024"
+    },
+    {
+      "id": "breach-roku-2024",
+      "entityName": "Roku Streaming Accounts",
+      "domain": "roku.com",
+      "breachDate": "April 2024",
+      "exposedData": [
+        "Payment Method",
+        "Account Credentials",
+        "Viewing History",
+        "Name"
+      ],
+      "description": "Credential stuffing compromising 591,000 active customer profiles.",
+      "matchingSettlementId": "sett-roku-2024"
+    },
+    {
+      "id": "breach-moveit-2023",
+      "entityName": "MoveIT Transfer / Progress Software",
+      "domain": "progress.com",
+      "breachDate": "June 2023",
+      "exposedData": [
+        "Corporate Records",
+        "SSN",
+        "Payroll Data",
+        "Banking Info"
+      ],
+      "description": "Zero-day vulnerability exploit exfiltrating government and financial data.",
+      "matchingSettlementId": "sett-moveit-2023"
+    },
+    {
+      "id": "breach-dell-2024",
+      "entityName": "Dell Customer Portal",
+      "domain": "dell.com",
+      "breachDate": "May 2024",
+      "exposedData": [
+        "Customer Name",
+        "Shipping Address",
+        "Hardware Specs",
+        "Order Dates"
+      ],
+      "description": "Unauthorized API exfiltration compromising 49 million purchase records.",
+      "matchingSettlementId": "sett-dell-2024"
+    },
+    {
+      "id": "breach-tmobile-2023",
+      "entityName": "T-Mobile Telecom",
+      "domain": "t-mobile.com",
+      "breachDate": "January 2023",
+      "exposedData": [
+        "Phone Number",
+        "Billing Address",
+        "Account #",
+        "Rate Plans"
+      ],
+      "description": "Malicious API activity exfiltrating data on 37 million prepaid and postpaid accounts.",
+      "matchingSettlementId": "sett-tmobile-2023"
+    }
+  ]
 }

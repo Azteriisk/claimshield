@@ -6,7 +6,8 @@ import {
   ShieldCheck, 
   Building2, 
   Sparkles,
-  ArrowLeft
+  ArrowLeft,
+  Scale
 } from "lucide-react";
 
 export function Navbar() {
@@ -64,6 +65,19 @@ export function Navbar() {
             <Building2 className={`w-3.5 h-3.5 ${pathname === "/admin" ? "text-slate-950" : "text-cyan-400"}`} />
             <span className="hidden sm:inline">B2B Admin Suite</span>
             <span className="sm:hidden">Admin</span>
+          </Link>
+
+          <Link
+            href="/admin/adjudicate"
+            className={`flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-xl transition border ${
+              pathname === "/admin/adjudicate"
+                ? "bg-purple-600 text-white border-purple-500 shadow-md shadow-purple-500/20 font-bold"
+                : "bg-slate-900 hover:bg-slate-800 text-slate-300 border-white/10"
+            }`}
+          >
+            <Scale className={`w-3.5 h-3.5 ${pathname === "/admin/adjudicate" ? "text-white" : "text-purple-400"}`} />
+            <span className="hidden md:inline">Examiner Console</span>
+            <span className="md:hidden">Adjudicate</span>
           </Link>
         </div>
       </div>

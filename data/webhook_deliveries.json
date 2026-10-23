@@ -1,0 +1,597 @@
+[
+  {
+    "id": "del_1792732674375_z9t1e",
+    "subscriptionId": "sub-kroll-01",
+    "tenantId": "kroll",
+    "event": "claim.sybil_quarantined",
+    "url": "https://api.kroll.com/v1/settlements/webhooks",
+    "payload": {
+      "id": "evt_1792732674375_5e85pl",
+      "event": "claim.sybil_quarantined",
+      "createdAt": "2026-10-23T05:17:54.375Z",
+      "tenantId": "kroll",
+      "data": {
+        "disputeId": "disp-robert-att-2024",
+        "blacklistedPayout": "burner_payout_syndicate99@tempmail.io",
+        "reason": "Examiner disqualified adverse claim after evidentiary collision review.",
+        "sybilQuarantineStatus": "CONFIRMED_FRAUD_SYNDICATE",
+        "examinerNotes": "Syndicate disposable drop identified.",
+        "adjudicatedBy": "Senior Claims Examiner (CLAIMS_EXAMINER)",
+        "timestamp": "2026-10-23T05:17:54.375Z"
+      },
+      "version": "2026-03-01"
+    },
+    "signatureHeader": "sha256=e90da7675e4848cfe05160d77a8ca96e3486205e307ab8dcc593076b3332952c",
+    "timestampHeader": "1792732674375",
+    "attempts": 1,
+    "maxAttempts": 3,
+    "status": "DELIVERED",
+    "attemptLogs": [
+      {
+        "attempt": 1,
+        "timestamp": "2026-10-23T05:17:54.375Z",
+        "statusCode": 200
+      }
+    ],
+    "createdAt": "2026-10-23T05:17:54.375Z",
+    "statusCode": 200,
+    "deliveredAt": "2026-10-23T05:17:54.375Z"
+  },
+  {
+    "id": "del_1792732674334_o6wtb",
+    "subscriptionId": "sub-kroll-01",
+    "tenantId": "kroll",
+    "event": "claim.dispute_resolved",
+    "url": "https://api.kroll.com/v1/settlements/webhooks",
+    "payload": {
+      "id": "evt_1792732674333_jr6et6",
+      "event": "claim.dispute_resolved",
+      "createdAt": "2026-10-23T05:17:54.333Z",
+      "tenantId": "kroll",
+      "data": {
+        "disputeId": "disp-robert-att-2024",
+        "settlementId": "sett-att-2024",
+        "trueClaimant": {
+          "name": "Robert Miller",
+          "payoutAddress": "robert.miller.real@gmail.com",
+          "livenessScore": 0.998,
+          "swornDeclaration": "28 U.S.C. 1746 Sworn Record Confirmed"
+        },
+        "adverseImposter": {
+          "burnerPayout": "burner_payout_syndicate99@tempmail.io",
+          "quarantined": true,
+          "blacklisted": true
+        },
+        "escrowReleasedAmount": 45,
+        "adjudicatedBy": "Eleanor Vance, Esq. (CLAIMS_EXAMINER)",
+        "timestamp": "2026-10-23T05:17:54.333Z"
+      },
+      "version": "2026-03-01"
+    },
+    "signatureHeader": "sha256=6daccc919d8b4edd4ff01f905cc2a2d7eaebbfaa0d983051ad6071a4d50d9a50",
+    "timestampHeader": "1792732674333",
+    "attempts": 1,
+    "maxAttempts": 3,
+    "status": "DELIVERED",
+    "attemptLogs": [
+      {
+        "attempt": 1,
+        "timestamp": "2026-10-23T05:17:54.334Z",
+        "statusCode": 200
+      }
+    ],
+    "createdAt": "2026-10-23T05:17:54.334Z",
+    "statusCode": 200,
+    "deliveredAt": "2026-10-23T05:17:54.334Z"
+  },
+  {
+    "id": "del_1792732649859_3oqm2",
+    "subscriptionId": "sub-kroll-01",
+    "tenantId": "kroll",
+    "event": "claim.sybil_quarantined",
+    "url": "https://api.kroll.com/v1/settlements/webhooks",
+    "payload": {
+      "id": "evt_1792732649858_s1ozpb",
+      "event": "claim.sybil_quarantined",
+      "createdAt": "2026-10-23T05:17:29.858Z",
+      "tenantId": "kroll",
+      "data": {
+        "disputeId": "disp-robert-att-2024",
+        "blacklistedPayout": "burner_payout_syndicate99@tempmail.io",
+        "reason": "Examiner disqualified adverse claim after evidentiary collision review.",
+        "sybilQuarantineStatus": "CONFIRMED_FRAUD_SYNDICATE",
+        "examinerNotes": "Syndicate disposable drop identified.",
+        "adjudicatedBy": "Senior Claims Examiner (CLAIMS_EXAMINER)",
+        "timestamp": "2026-10-23T05:17:29.858Z"
+      },
+      "version": "2026-03-01"
+    },
+    "signatureHeader": "sha256=8a6a6290e54c91b37c149c83f74fcfe33afd208906288caeef3bc4f296101a41",
+    "timestampHeader": "1792732649858",
+    "attempts": 1,
+    "maxAttempts": 3,
+    "status": "DELIVERED",
+    "attemptLogs": [
+      {
+        "attempt": 1,
+        "timestamp": "2026-10-23T05:17:29.859Z",
+        "statusCode": 200
+      }
+    ],
+    "createdAt": "2026-10-23T05:17:29.859Z",
+    "statusCode": 200,
+    "deliveredAt": "2026-10-23T05:17:29.859Z"
+  },
+  {
+    "id": "del_1792732649835_lig3x",
+    "subscriptionId": "sub-kroll-01",
+    "tenantId": "kroll",
+    "event": "claim.dispute_resolved",
+    "url": "https://api.kroll.com/v1/settlements/webhooks",
+    "payload": {
+      "id": "evt_1792732649835_cnml1c",
+      "event": "claim.dispute_resolved",
+      "createdAt": "2026-10-23T05:17:29.835Z",
+      "tenantId": "kroll",
+      "data": {
+        "disputeId": "disp-robert-att-2024",
+        "settlementId": "sett-att-2024",
+        "trueClaimant": {
+          "name": "Robert Miller",
+          "payoutAddress": "robert.miller.real@gmail.com",
+          "livenessScore": 0.998,
+          "swornDeclaration": "28 U.S.C. 1746 Sworn Record Confirmed"
+        },
+        "adverseImposter": {
+          "burnerPayout": "burner_payout_syndicate99@tempmail.io",
+          "quarantined": true,
+          "blacklisted": true
+        },
+        "escrowReleasedAmount": 45,
+        "adjudicatedBy": "Eleanor Vance, Esq. (CLAIMS_EXAMINER)",
+        "timestamp": "2026-10-23T05:17:29.835Z"
+      },
+      "version": "2026-03-01"
+    },
+    "signatureHeader": "sha256=3ce36640f87b309c31d5123c69580ea3cd28b76fe01d20eaba17d6cf9d32b7b4",
+    "timestampHeader": "1792732649835",
+    "attempts": 1,
+    "maxAttempts": 3,
+    "status": "DELIVERED",
+    "attemptLogs": [
+      {
+        "attempt": 1,
+        "timestamp": "2026-10-23T05:17:29.835Z",
+        "statusCode": 200
+      }
+    ],
+    "createdAt": "2026-10-23T05:17:29.835Z",
+    "statusCode": 200,
+    "deliveredAt": "2026-10-23T05:17:29.835Z"
+  },
+  {
+    "id": "del_1792732622986_12g56",
+    "subscriptionId": "sub-kroll-01",
+    "tenantId": "kroll",
+    "event": "claim.sybil_quarantined",
+    "url": "https://api.kroll.com/v1/settlements/webhooks",
+    "payload": {
+      "id": "evt_1792732622985_sl9zqc",
+      "event": "claim.sybil_quarantined",
+      "createdAt": "2026-10-23T05:17:02.985Z",
+      "tenantId": "kroll",
+      "data": {
+        "disputeId": "disp-robert-att-2024",
+        "blacklistedPayout": "burner_payout_syndicate99@tempmail.io",
+        "reason": "Examiner disqualified adverse claim after evidentiary collision review.",
+        "sybilQuarantineStatus": "CONFIRMED_FRAUD_SYNDICATE",
+        "examinerNotes": "Syndicate disposable drop identified.",
+        "adjudicatedBy": "Senior Claims Examiner (CLAIMS_EXAMINER)",
+        "timestamp": "2026-10-23T05:17:02.985Z"
+      },
+      "version": "2026-03-01"
+    },
+    "signatureHeader": "sha256=4a92da1d3c54414285c0e4d0cd6111dfaa51da91ae8f6c17af16054aaa82522c",
+    "timestampHeader": "1792732622985",
+    "attempts": 1,
+    "maxAttempts": 3,
+    "status": "DELIVERED",
+    "attemptLogs": [
+      {
+        "attempt": 1,
+        "timestamp": "2026-10-23T05:17:02.986Z",
+        "statusCode": 200
+      }
+    ],
+    "createdAt": "2026-10-23T05:17:02.986Z",
+    "statusCode": 200,
+    "deliveredAt": "2026-10-23T05:17:02.986Z"
+  },
+  {
+    "id": "del_1792732622920_emhyi",
+    "subscriptionId": "sub-kroll-01",
+    "tenantId": "kroll",
+    "event": "claim.dispute_resolved",
+    "url": "https://api.kroll.com/v1/settlements/webhooks",
+    "payload": {
+      "id": "evt_1792732622920_xp5qgd",
+      "event": "claim.dispute_resolved",
+      "createdAt": "2026-10-23T05:17:02.920Z",
+      "tenantId": "kroll",
+      "data": {
+        "disputeId": "disp-robert-att-2024",
+        "settlementId": "sett-att-2024",
+        "trueClaimant": {
+          "name": "Robert Miller",
+          "payoutAddress": "robert.miller.real@gmail.com",
+          "livenessScore": 0.998,
+          "swornDeclaration": "28 U.S.C. 1746 Sworn Record Confirmed"
+        },
+        "adverseImposter": {
+          "burnerPayout": "burner_payout_syndicate99@tempmail.io",
+          "quarantined": true,
+          "blacklisted": true
+        },
+        "escrowReleasedAmount": 45,
+        "adjudicatedBy": "Eleanor Vance, Esq. (CLAIMS_EXAMINER)",
+        "timestamp": "2026-10-23T05:17:02.920Z"
+      },
+      "version": "2026-03-01"
+    },
+    "signatureHeader": "sha256=4aeb90837aef6912d74ec307b1ddbdc26de0a010a82cab54527f7657ffb3f32c",
+    "timestampHeader": "1792732622920",
+    "attempts": 1,
+    "maxAttempts": 3,
+    "status": "DELIVERED",
+    "attemptLogs": [
+      {
+        "attempt": 1,
+        "timestamp": "2026-10-23T05:17:02.920Z",
+        "statusCode": 200
+      }
+    ],
+    "createdAt": "2026-10-23T05:17:02.920Z",
+    "statusCode": 200,
+    "deliveredAt": "2026-10-23T05:17:02.920Z"
+  },
+  {
+    "id": "del_1792732614989_3z0dc",
+    "subscriptionId": "sub-kroll-01",
+    "tenantId": "kroll",
+    "event": "claim.sybil_quarantined",
+    "url": "https://api.kroll.com/v1/settlements/webhooks",
+    "payload": {
+      "id": "evt_1792732614988_4bu13s",
+      "event": "claim.sybil_quarantined",
+      "createdAt": "2026-10-23T05:16:54.988Z",
+      "tenantId": "kroll",
+      "data": {
+        "disputeId": "disp-robert-att-2024",
+        "blacklistedPayout": "burner_payout_syndicate99@tempmail.io",
+        "reason": "Examiner disqualified adverse claim after evidentiary collision review.",
+        "sybilQuarantineStatus": "CONFIRMED_FRAUD_SYNDICATE",
+        "examinerNotes": "Syndicate disposable drop identified.",
+        "adjudicatedBy": "Senior Claims Examiner (CLAIMS_EXAMINER)",
+        "timestamp": "2026-10-23T05:16:54.988Z"
+      },
+      "version": "2026-03-01"
+    },
+    "signatureHeader": "sha256=ef68ef77fcdd7b715ae19487184d567fa7112c4fbd0b5dd31d8c46c7ada90070",
+    "timestampHeader": "1792732614988",
+    "attempts": 1,
+    "maxAttempts": 3,
+    "status": "DELIVERED",
+    "attemptLogs": [
+      {
+        "attempt": 1,
+        "timestamp": "2026-10-23T05:16:54.989Z",
+        "statusCode": 200
+      }
+    ],
+    "createdAt": "2026-10-23T05:16:54.989Z",
+    "statusCode": 200,
+    "deliveredAt": "2026-10-23T05:16:54.989Z"
+  },
+  {
+    "id": "del_1792732614949_kvmtn",
+    "subscriptionId": "sub-kroll-01",
+    "tenantId": "kroll",
+    "event": "claim.dispute_resolved",
+    "url": "https://api.kroll.com/v1/settlements/webhooks",
+    "payload": {
+      "id": "evt_1792732614949_47g1dn",
+      "event": "claim.dispute_resolved",
+      "createdAt": "2026-10-23T05:16:54.949Z",
+      "tenantId": "kroll",
+      "data": {
+        "disputeId": "disp-robert-att-2024",
+        "settlementId": "sett-att-2024",
+        "trueClaimant": {
+          "name": "Robert Miller",
+          "payoutAddress": "robert.miller.real@gmail.com",
+          "livenessScore": 0.998,
+          "swornDeclaration": "28 U.S.C. 1746 Sworn Record Confirmed"
+        },
+        "adverseImposter": {
+          "burnerPayout": "burner_payout_syndicate99@tempmail.io",
+          "quarantined": true,
+          "blacklisted": true
+        },
+        "escrowReleasedAmount": 45,
+        "adjudicatedBy": "Eleanor Vance, Esq. (CLAIMS_EXAMINER)",
+        "timestamp": "2026-10-23T05:16:54.949Z"
+      },
+      "version": "2026-03-01"
+    },
+    "signatureHeader": "sha256=1ef582b2d79acabd86e24d719bc9a60231d35c3d1ba5c50cf448391065159b91",
+    "timestampHeader": "1792732614949",
+    "attempts": 1,
+    "maxAttempts": 3,
+    "status": "DELIVERED",
+    "attemptLogs": [
+      {
+        "attempt": 1,
+        "timestamp": "2026-10-23T05:16:54.949Z",
+        "statusCode": 200
+      }
+    ],
+    "createdAt": "2026-10-23T05:16:54.949Z",
+    "statusCode": 200,
+    "deliveredAt": "2026-10-23T05:16:54.949Z"
+  },
+  {
+    "id": "del_1792732594575_vwhi2",
+    "subscriptionId": "sub-kroll-01",
+    "tenantId": "kroll",
+    "event": "claim.sybil_quarantined",
+    "url": "https://api.kroll.com/v1/settlements/webhooks",
+    "payload": {
+      "id": "evt_1792732594575_xkmlio",
+      "event": "claim.sybil_quarantined",
+      "createdAt": "2026-10-23T05:16:34.575Z",
+      "tenantId": "kroll",
+      "data": {
+        "disputeId": "disp-robert-att-2024",
+        "blacklistedPayout": "burner_payout_syndicate99@tempmail.io",
+        "reason": "Examiner disqualified adverse claim after evidentiary collision review.",
+        "sybilQuarantineStatus": "CONFIRMED_FRAUD_SYNDICATE",
+        "examinerNotes": "Syndicate disposable drop identified.",
+        "adjudicatedBy": "Senior Claims Examiner (CLAIMS_EXAMINER)",
+        "timestamp": "2026-10-23T05:16:34.575Z"
+      },
+      "version": "2026-03-01"
+    },
+    "signatureHeader": "sha256=f3a199f8c619518991e8dafc276a616525f213dad45954f87f9fb971e826205c",
+    "timestampHeader": "1792732594575",
+    "attempts": 1,
+    "maxAttempts": 3,
+    "status": "DELIVERED",
+    "attemptLogs": [
+      {
+        "attempt": 1,
+        "timestamp": "2026-10-23T05:16:34.575Z",
+        "statusCode": 200
+      }
+    ],
+    "createdAt": "2026-10-23T05:16:34.575Z",
+    "statusCode": 200,
+    "deliveredAt": "2026-10-23T05:16:34.575Z"
+  },
+  {
+    "id": "del_1792732594543_h2ir7",
+    "subscriptionId": "sub-kroll-01",
+    "tenantId": "kroll",
+    "event": "claim.dispute_resolved",
+    "url": "https://api.kroll.com/v1/settlements/webhooks",
+    "payload": {
+      "id": "evt_1792732594542_o0974h",
+      "event": "claim.dispute_resolved",
+      "createdAt": "2026-10-23T05:16:34.542Z",
+      "tenantId": "kroll",
+      "data": {
+        "disputeId": "disp-robert-att-2024",
+        "settlementId": "sett-att-2024",
+        "trueClaimant": {
+          "name": "Robert Miller",
+          "payoutAddress": "robert.miller.real@gmail.com",
+          "livenessScore": 0.998,
+          "swornDeclaration": "28 U.S.C. 1746 Sworn Record Confirmed"
+        },
+        "adverseImposter": {
+          "burnerPayout": "burner_payout_syndicate99@tempmail.io",
+          "quarantined": true,
+          "blacklisted": true
+        },
+        "escrowReleasedAmount": 45,
+        "adjudicatedBy": "Eleanor Vance, Esq. (CLAIMS_EXAMINER)",
+        "timestamp": "2026-10-23T05:16:34.542Z"
+      },
+      "version": "2026-03-01"
+    },
+    "signatureHeader": "sha256=34a43c94517df651e0aab59aec8026289cd9014769aaefbec2dc95e234621a4c",
+    "timestampHeader": "1792732594542",
+    "attempts": 1,
+    "maxAttempts": 3,
+    "status": "DELIVERED",
+    "attemptLogs": [
+      {
+        "attempt": 1,
+        "timestamp": "2026-10-23T05:16:34.543Z",
+        "statusCode": 200
+      }
+    ],
+    "createdAt": "2026-10-23T05:16:34.543Z",
+    "statusCode": 200,
+    "deliveredAt": "2026-10-23T05:16:34.543Z"
+  },
+  {
+    "id": "del_1792732586997_8om50",
+    "subscriptionId": "sub-kroll-01",
+    "tenantId": "kroll",
+    "event": "claim.sybil_quarantined",
+    "url": "https://api.kroll.com/v1/settlements/webhooks",
+    "payload": {
+      "id": "evt_1792732586996_r30qb1",
+      "event": "claim.sybil_quarantined",
+      "createdAt": "2026-10-23T05:16:26.996Z",
+      "tenantId": "kroll",
+      "data": {
+        "disputeId": "disp-robert-att-2024",
+        "blacklistedPayout": "burner_payout_syndicate99@tempmail.io",
+        "reason": "Examiner disqualified adverse claim after evidentiary collision review.",
+        "sybilQuarantineStatus": "CONFIRMED_FRAUD_SYNDICATE",
+        "examinerNotes": "Syndicate disposable drop identified.",
+        "adjudicatedBy": "Senior Claims Examiner (CLAIMS_EXAMINER)",
+        "timestamp": "2026-10-23T05:16:26.996Z"
+      },
+      "version": "2026-03-01"
+    },
+    "signatureHeader": "sha256=af50a0a06630cd8bd2bef8cda0e1c78cdca21ba8060cc44254ee29a997427271",
+    "timestampHeader": "1792732586996",
+    "attempts": 1,
+    "maxAttempts": 3,
+    "status": "DELIVERED",
+    "attemptLogs": [
+      {
+        "attempt": 1,
+        "timestamp": "2026-10-23T05:16:26.997Z",
+        "statusCode": 200
+      }
+    ],
+    "createdAt": "2026-10-23T05:16:26.997Z",
+    "statusCode": 200,
+    "deliveredAt": "2026-10-23T05:16:26.997Z"
+  },
+  {
+    "id": "del_1792732586984_g5cea",
+    "subscriptionId": "sub-kroll-01",
+    "tenantId": "kroll",
+    "event": "claim.dispute_resolved",
+    "url": "https://api.kroll.com/v1/settlements/webhooks",
+    "payload": {
+      "id": "evt_1792732586984_avbk7y",
+      "event": "claim.dispute_resolved",
+      "createdAt": "2026-10-23T05:16:26.984Z",
+      "tenantId": "kroll",
+      "data": {
+        "disputeId": "disp-robert-att-2024",
+        "settlementId": "sett-att-2024",
+        "trueClaimant": {
+          "name": "Robert Miller",
+          "payoutAddress": "robert.miller.real@gmail.com",
+          "livenessScore": 0.998,
+          "swornDeclaration": "28 U.S.C. 1746 Sworn Record Confirmed"
+        },
+        "adverseImposter": {
+          "burnerPayout": "burner_payout_syndicate99@tempmail.io",
+          "quarantined": true,
+          "blacklisted": true
+        },
+        "escrowReleasedAmount": 45,
+        "adjudicatedBy": "Eleanor Vance, Esq. (CLAIMS_EXAMINER)",
+        "timestamp": "2026-10-23T05:16:26.984Z"
+      },
+      "version": "2026-03-01"
+    },
+    "signatureHeader": "sha256=0edb0bb769e3eee5e0b63ce746a54fb805c17c667365247a2aa7562ca23a5a3a",
+    "timestampHeader": "1792732586984",
+    "attempts": 1,
+    "maxAttempts": 3,
+    "status": "DELIVERED",
+    "attemptLogs": [
+      {
+        "attempt": 1,
+        "timestamp": "2026-10-23T05:16:26.984Z",
+        "statusCode": 200
+      }
+    ],
+    "createdAt": "2026-10-23T05:16:26.984Z",
+    "statusCode": 200,
+    "deliveredAt": "2026-10-23T05:16:26.984Z"
+  },
+  {
+    "id": "del_1792732577205_xjzqy",
+    "subscriptionId": "sub-kroll-01",
+    "tenantId": "kroll",
+    "event": "claim.sybil_quarantined",
+    "url": "https://api.kroll.com/v1/settlements/webhooks",
+    "payload": {
+      "id": "evt_1792732577205_0nqtns",
+      "event": "claim.sybil_quarantined",
+      "createdAt": "2026-10-23T05:16:17.205Z",
+      "tenantId": "kroll",
+      "data": {
+        "disputeId": "disp-robert-att-2024",
+        "blacklistedPayout": "burner_payout_syndicate99@tempmail.io",
+        "reason": "Examiner disqualified adverse claim after evidentiary collision review.",
+        "sybilQuarantineStatus": "CONFIRMED_FRAUD_SYNDICATE",
+        "examinerNotes": "Syndicate disposable drop identified.",
+        "adjudicatedBy": "Senior Claims Examiner (CLAIMS_EXAMINER)",
+        "timestamp": "2026-10-23T05:16:17.205Z"
+      },
+      "version": "2026-03-01"
+    },
+    "signatureHeader": "sha256=8fe9a8c37d491b584fc2d98999690540051c66471d0c02c3deea27d4a61f8327",
+    "timestampHeader": "1792732577205",
+    "attempts": 1,
+    "maxAttempts": 3,
+    "status": "DELIVERED",
+    "attemptLogs": [
+      {
+        "attempt": 1,
+        "timestamp": "2026-10-23T05:16:17.205Z",
+        "statusCode": 200
+      }
+    ],
+    "createdAt": "2026-10-23T05:16:17.205Z",
+    "statusCode": 200,
+    "deliveredAt": "2026-10-23T05:16:17.208Z"
+  },
+  {
+    "id": "del_1792732577164_3u73l",
+    "subscriptionId": "sub-kroll-01",
+    "tenantId": "kroll",
+    "event": "claim.dispute_resolved",
+    "url": "https://api.kroll.com/v1/settlements/webhooks",
+    "payload": {
+      "id": "evt_1792732577164_v5yg9m",
+      "event": "claim.dispute_resolved",
+      "createdAt": "2026-10-23T05:16:17.164Z",
+      "tenantId": "kroll",
+      "data": {
+        "disputeId": "disp-robert-att-2024",
+        "settlementId": "sett-att-2024",
+        "trueClaimant": {
+          "name": "Robert Miller",
+          "payoutAddress": "robert.miller.real@gmail.com",
+          "livenessScore": 0.998,
+          "swornDeclaration": "28 U.S.C. 1746 Sworn Record Confirmed"
+        },
+        "adverseImposter": {
+          "burnerPayout": "burner_payout_syndicate99@tempmail.io",
+          "quarantined": true,
+          "blacklisted": true
+        },
+        "escrowReleasedAmount": 45,
+        "adjudicatedBy": "Eleanor Vance, Esq. (CLAIMS_EXAMINER)",
+        "timestamp": "2026-10-23T05:16:17.164Z"
+      },
+      "version": "2026-03-01"
+    },
+    "signatureHeader": "sha256=d23e520ab94993e40c7e7fc139429d3700c21f9497bb0d515e40066dc5afca1d",
+    "timestampHeader": "1792732577164",
+    "attempts": 1,
+    "maxAttempts": 3,
+    "status": "DELIVERED",
+    "attemptLogs": [
+      {
+        "attempt": 1,
+        "timestamp": "2026-10-23T05:16:17.164Z",
+        "statusCode": 200
+      }
+    ],
+    "createdAt": "2026-10-23T05:16:17.164Z",
+    "statusCode": 200,
+    "deliveredAt": "2026-10-23T05:16:17.167Z"
+  }
+]
