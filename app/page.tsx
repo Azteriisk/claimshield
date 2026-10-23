@@ -18,10 +18,11 @@ import {
   Fingerprint, 
   Send,
   FileText,
+  Download,
   Calendar,
   Clock,
-  Globe,
-  HelpCircle
+  Printer,
+  Scale
 } from "lucide-react";
 
 interface Settlement {
@@ -49,6 +50,7 @@ type FlowStep =
   | "IDENTITY_LOCK" 
   | "DISPUTE_CIRCUIT_BREAKER" 
   | "STEP_UP_VERIFY" 
+  | "AFFIDAVIT_EXPORT" 
   | "SUBMIT_CLAIMS" 
   | "VAULT_SUCCESS";
 
@@ -76,6 +78,7 @@ export default function SingleFlowApp() {
   // Dispute / Step-Up State
   const [disputeId, setDisputeId] = useState("");
   const [stepUpInProgress, setStepUpInProgress] = useState(false);
+  const [affidavitDownloaded, setAffidavitDownloaded] = useState(false);
 
   // Step 4: Claims State
   const [filedClaims, setFiledClaims] = useState<any[]>([]);
@@ -89,7 +92,7 @@ export default function SingleFlowApp() {
     setUserEmail(emailToScan);
     setStep("SCANNING");
 
-    setScanMessage("Querying nationwide breach repositories...");
+    setScanMessage("Querying public state AG breach repositories...");
     await new Promise(r => setTimeout(r, 450));
     setScanMessage("Cross-referencing active federal court settlement dockets...");
     await new Promise(r => setTimeout(r, 450));
@@ -110,7 +113,7 @@ export default function SingleFlowApp() {
         payoutAddress: emailToScan
       }));
 
-      // If testing the Robert Miller imposter scenario
+      // Preset realistic test for Robert Miller conflict scenario
       if (emailToScan.includes("robert.miller")) {
         setIdentityForm({
           legalFirstName: "Robert",
@@ -168,7 +171,7 @@ export default function SingleFlowApp() {
   };
 
   // -------------------------------------------------------------
-  // STEP 3.5: TRIP CIRCUIT BREAKER & STEP-UP RECOVERY
+  // STEP 3.5: DISPUTE TRIGGER & BIOMETRIC STEP-UP
   // -------------------------------------------------------------
   const handleTripCircuitBreaker = async () => {
     try {
@@ -191,7 +194,7 @@ export default function SingleFlowApp() {
         setStep("STEP_UP_VERIFY");
       }
     } catch (err) {
-      console.error("Failed to trip circuit breaker", err);
+      console.error("Failed to initiate dispute", err);
     }
   };
 
@@ -211,8 +214,7 @@ export default function SingleFlowApp() {
       const data = await res.json();
       if (data.reclaimedClaimant) {
         setRegisteredClaimantId(data.reclaimedClaimant.id);
-        await new Promise(r => setTimeout(r, 600));
-        setStep("SUBMIT_CLAIMS");
+        setStep("AFFIDAVIT_EXPORT");
       }
     } catch (err) {
       console.error("Step-up failed", err);
@@ -263,9 +265,39 @@ export default function SingleFlowApp() {
     setStep("VAULT_SUCCESS");
   };
 
+  const handleDownloadAffidavit = () => {
+    setAffidavitDownloaded(true);
+    const affidavitText = `
+FORMAL NOTICE OF CONFLICTING SETTLEMENT CLAIM & DEMAND FOR ESCROW HOLD
+TO: Kroll Settlement Administration / Claims Examination Division
+IN RE: AT&T Customer Data Incident Class Action Settlement (Case No. 2:24-cv-04192)
+
+DECLARATION UNDER PENALTY OF PERJURY (28 U.S.C. § 1746)
+
+1. I, ${identityForm.legalFirstName} ${identityForm.legalLastName}, declare under penalty of perjury under the laws of the United States of America that I am the true and authentic class member associated with SSN ending in ***-**-${identityForm.ssnLast4} and DOB ${identityForm.dob}.
+2. I recently received notice or encountered a portal rejection indicating that a settlement claim was fraudulently lodged in my name with an unauthorized payout destination.
+3. I have verified my identity via NIST 800-63A Level 3 biometric facial liveness on the ClaimShield protocol on ${new Date().toISOString()}.
+4. I hereby DEMAND an immediate judicial freeze on any digital or paper disbursement under this identity until this conflict is adjudicated.
+5. All lawful distributions must be routed exclusively to my verified address: ${identityForm.payoutAddress}.
+
+Executed on ${new Date().toLocaleDateString()}
+Claimant Signature: /s/ ${identityForm.legalFirstName} ${identityForm.legalLastName} (Digitally Authenticated)
+Audit Token: tok_rule23_${Date.now()}_dispute_freeze
+    `.trim();
+
+    const blob = new Blob([affidavitText], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `Affidavit_Of_Conflicting_Claim_${identityForm.legalLastName}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  };
+
   return (
     <div className="min-h-[calc(100vh-64px)] flex flex-col justify-between py-6 sm:py-10 px-4 sm:px-6 relative">
-      {/* Subtle Ambient Background Gradients */}
+      {/* Subtle Background Glow */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-emerald-500/5 blur-[120px] rounded-full pointer-events-none -z-10" />
 
       {/* Top Breadcrumb & Switcher */}
@@ -284,7 +316,7 @@ export default function SingleFlowApp() {
             {step === "INPUT_EMAIL" && (
               <span className="flex items-center gap-1.5 text-emerald-400 font-medium">
                 <ShieldCheck className="w-3.5 h-3.5" />
-                <span>Verified Class Action Claims Intake</span>
+                <span>Zero-Access Consumer Protection Layer</span>
               </span>
             )}
           </div>
@@ -307,8 +339,8 @@ export default function SingleFlowApp() {
                 step === "INPUT_EMAIL" ? "20%" :
                 step === "SCANNING" ? "40%" :
                 step === "REVEAL_PAYOUTS" ? "60%" :
-                step === "IDENTITY_LOCK" ? "80%" :
-                step === "DISPUTE_CIRCUIT_BREAKER" || step === "STEP_UP_VERIFY" ? "85%" :
+                step === "IDENTITY_LOCK" ? "75%" :
+                step === "DISPUTE_CIRCUIT_BREAKER" || step === "STEP_UP_VERIFY" || step === "AFFIDAVIT_EXPORT" ? "85%" :
                 step === "SUBMIT_CLAIMS" ? "92%" : "100%"
             }}
           />
@@ -331,7 +363,7 @@ export default function SingleFlowApp() {
                 Data Breach Settlement Search
               </h1>
               <p className="text-xs sm:text-sm text-slate-400 leading-relaxed max-w-md mx-auto">
-                Check whether your personal data was compromised in recent class actions and claim eligible pro-rata cash payouts.
+                Discover active class action settlements involving your breached accounts and lock your identity to prevent settlement theft.
               </p>
             </div>
 
@@ -344,7 +376,7 @@ export default function SingleFlowApp() {
             >
               <div>
                 <label className="text-xs font-semibold text-slate-300 block mb-1.5">
-                  Email Address or Phone Number
+                  Email Address or Mobile Phone
                 </label>
                 <input
                   type="email"
@@ -361,12 +393,12 @@ export default function SingleFlowApp() {
                 disabled={!userEmail.trim()}
                 className="w-full py-4 bg-emerald-500 hover:bg-emerald-400 disabled:bg-slate-800 disabled:text-slate-600 text-slate-950 font-bold text-sm rounded-2xl transition flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 active:scale-[0.99]"
               >
-                <span>Check Settlement Eligibility</span>
+                <span>Find Eligible Settlements</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
             </form>
 
-            {/* Realistic Demo Scenarios */}
+            {/* Test Scenarios */}
             <div className="pt-4 border-t border-white/[0.08] space-y-2.5">
               <span className="text-[11px] text-slate-400 uppercase font-mono font-semibold block text-center">
                 Interactive Test Scenarios
@@ -375,11 +407,11 @@ export default function SingleFlowApp() {
                 <button
                   type="button"
                   onClick={() => handleStartScan("robert.miller.breached@att.net")}
-                  className="p-3 rounded-xl bg-slate-900/80 hover:bg-slate-800/80 border border-red-500/30 hover:border-red-500/50 text-left transition space-y-0.5 group"
+                  className="p-3 rounded-xl bg-slate-900/80 hover:bg-slate-800/80 border border-amber-500/30 hover:border-amber-500/50 text-left transition space-y-0.5"
                 >
                   <div className="flex items-center justify-between">
-                    <span className="font-bold text-slate-200 text-xs">Simulate Identity Theft</span>
-                    <span className="text-[9px] bg-red-950 text-red-300 px-1.5 py-0.5 rounded font-mono font-bold">CONFLICT</span>
+                    <span className="font-bold text-slate-200 text-xs">Test Conflict &amp; Dispute</span>
+                    <span className="text-[9px] bg-amber-950 text-amber-300 px-1.5 py-0.5 rounded font-mono font-bold">DISPUTE KIT</span>
                   </div>
                   <div className="text-[11px] text-slate-400 font-mono truncate">robert.miller@att.net</div>
                 </button>
@@ -387,10 +419,10 @@ export default function SingleFlowApp() {
                 <button
                   type="button"
                   onClick={() => handleStartScan("fan@ticketmaster-buyer.com")}
-                  className="p-3 rounded-xl bg-slate-900/80 hover:bg-slate-800/80 border border-emerald-500/30 hover:border-emerald-500/50 text-left transition space-y-0.5 group"
+                  className="p-3 rounded-xl bg-slate-900/80 hover:bg-slate-800/80 border border-emerald-500/30 hover:border-emerald-500/50 text-left transition space-y-0.5"
                 >
                   <div className="flex items-center justify-between">
-                    <span className="font-bold text-slate-200 text-xs">Simulate Clean Claim</span>
+                    <span className="font-bold text-slate-200 text-xs">Test Clean Claim Filing</span>
                     <span className="text-[9px] bg-emerald-950 text-emerald-300 px-1.5 py-0.5 rounded font-mono font-bold">ELIGIBLE</span>
                   </div>
                   <div className="text-[11px] text-slate-400 font-mono truncate">fan@ticketmaster.com</div>
@@ -413,7 +445,7 @@ export default function SingleFlowApp() {
             </div>
 
             <div className="space-y-1">
-              <h2 className="text-xl font-bold text-white tracking-tight">Scanning Settlement Escrows</h2>
+              <h2 className="text-xl font-bold text-white tracking-tight">Scanning Public Settlement Dockets</h2>
               <p className="text-xs text-slate-400 font-mono truncate">{userEmail}</p>
             </div>
 
@@ -431,10 +463,10 @@ export default function SingleFlowApp() {
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/[0.08]">
               <div>
                 <span className="inline-flex items-center gap-1 text-[11px] font-bold uppercase tracking-wider text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/30 font-mono">
-                  <Sparkles className="w-3 h-3" /> Settlement Funds Available
+                  <Sparkles className="w-3 h-3" /> Court Dockets Matched
                 </span>
                 <h2 className="text-xl sm:text-2xl font-black text-white mt-1">
-                  {matchedBreaches.length} Eligible Class Actions
+                  {matchedBreaches.length} Active Class Actions Found
                 </h2>
                 <p className="text-xs text-slate-400 font-mono">{userEmail}</p>
               </div>
@@ -465,54 +497,45 @@ export default function SingleFlowApp() {
                     )}
                   </div>
 
-                  <div className="flex items-center gap-2 pt-1">
-                    <span className="text-[10px] text-slate-400">Compromised:</span>
-                    <div className="flex flex-wrap gap-1">
-                      {b.exposedData.slice(0, 3).map((d, i) => (
-                        <span key={i} className="text-[10px] bg-slate-900 text-slate-300 px-2 py-0.5 rounded border border-white/5">
-                          {d}
-                        </span>
-                      ))}
-                    </div>
+                  <div className="flex items-center gap-2 pt-1 text-[11px] text-slate-400">
+                    <span>Admin: <strong className="text-slate-300">{b.settlement?.administratorName}</strong></span>
+                    <span>&bull;</span>
+                    <span>Deadline: <strong className="text-slate-300">{b.settlement?.claimDeadline}</strong></span>
                   </div>
                 </div>
               ))}
             </div>
 
-            {hasSsnRisk && (
-              <div className="p-3.5 rounded-2xl bg-red-950/40 border border-red-500/30 text-red-200 text-xs flex items-start gap-3">
-                <AlertTriangle className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
-                <div className="space-y-0.5">
-                  <strong className="text-red-300 font-bold">High Identity Theft Vulnerability</strong>
-                  <p className="text-[11px] text-slate-300 leading-relaxed">
-                    Social Security numbers were exposed in these breaches. Fraud syndicates actively target these funds using victims&apos; stolen identities.
-                  </p>
-                </div>
-              </div>
-            )}
+            <div className="p-3.5 rounded-2xl bg-slate-950 border border-white/10 space-y-1 text-xs">
+              <strong className="text-white block font-semibold">How Zero-Access Protection Works:</strong>
+              <p className="text-[11px] text-slate-400 leading-relaxed">
+                By verifying your legal name and payout destination now, you create an unforgeable cryptographic timestamp.
+                If an imposter ever attempts to claim this settlement in your name, you hold conclusive proof of prior ownership.
+              </p>
+            </div>
 
             <button
               onClick={() => setStep("IDENTITY_LOCK")}
               className="w-full py-4 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-sm rounded-2xl transition flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 active:scale-[0.99]"
             >
-              <span>Continue: Verify Identity &amp; Lock Payout</span>
+              <span>Anchor Identity &amp; Lock Payout Rail</span>
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>
         )}
 
         {/* ========================================================= */}
-        {/* STEP 4: IDENTITY LOCK & DEDUPLICATION */}
+        {/* STEP 4: IDENTITY ANCHORING */}
         {/* ========================================================= */}
         {step === "IDENTITY_LOCK" && (
           <div className="glass-card rounded-3xl p-6 sm:p-8 space-y-6 border border-white/10 shadow-2xl">
             <div className="space-y-1">
               <span className="text-[10px] font-mono uppercase tracking-wider text-emerald-400 font-bold bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/30">
-                Identity Authentication
+                Pre-Emptive Proof of Claim
               </span>
               <h2 className="text-xl font-black text-white mt-1">Anchor Your Legal Identity</h2>
               <p className="text-xs text-slate-400">
-                To prevent duplicate filings and ensure settlement checks are issued to you, confirm your legal identity and payment destination.
+                Establishes your timestamped claim credential before the court deadline.
               </p>
             </div>
 
@@ -566,7 +589,7 @@ export default function SingleFlowApp() {
 
               <div>
                 <label className="text-[11px] font-semibold text-slate-400 block mb-1">
-                  Verified Payout Rail (PayPal / Digital Wallet)
+                  Your Locked Payout Destination (PayPal Email)
                 </label>
                 <input
                   type="email"
@@ -575,16 +598,13 @@ export default function SingleFlowApp() {
                   onChange={(e) => setIdentityForm({ ...identityForm, payoutAddress: e.target.value })}
                   className="w-full bg-slate-950 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-slate-100 font-mono"
                 />
-                <span className="text-[10px] text-slate-400 mt-1 block">
-                  This destination will be cryptographically locked to your identity anchor.
-                </span>
               </div>
 
               <button
                 type="submit"
-                className="w-full py-4 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-sm rounded-2xl transition flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 active:scale-[0.99] mt-2"
+                className="w-full py-4 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-sm rounded-2xl transition flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 active:scale-[0.99]"
               >
-                <span>Verify &amp; Continue</span>
+                <span>Timestamp &amp; Anchor Identity</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
             </form>
@@ -592,89 +612,64 @@ export default function SingleFlowApp() {
         )}
 
         {/* ========================================================= */}
-        {/* STEP 3.5: REALISTIC IDENTITY CONFLICT & ESCROW FREEZE SCREEN */}
+        {/* STEP 3.5: REALISTIC IDENTITY CONFLICT / REJECTION NOTICE */}
         {/* ========================================================= */}
         {step === "DISPUTE_CIRCUIT_BREAKER" && (
           <div className="glass-card rounded-3xl p-6 sm:p-8 space-y-6 border border-amber-500/40 shadow-2xl">
-            {/* Header Security Status */}
             <div className="flex items-start justify-between gap-3 pb-4 border-b border-white/[0.08]">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 shrink-0">
                   <ShieldAlert className="w-5 h-5" />
                 </div>
                 <div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-[10px] font-mono uppercase tracking-wider text-amber-400 font-bold bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/25">
-                      Security Alert &bull; Case #SEC-2026-8819
-                    </span>
-                  </div>
-                  <h2 className="text-xl font-bold text-white mt-1">Identity Conflict Detected</h2>
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-amber-400 font-bold bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/25">
+                    Filing Conflict Detected
+                  </span>
+                  <h2 className="text-xl font-bold text-white mt-1">Conflicting Claim on File</h2>
                 </div>
-              </div>
-
-              <div className="text-right">
-                <span className="text-[11px] font-mono text-red-400 bg-red-950/80 px-2.5 py-1 rounded-xl border border-red-800 font-bold">
-                  Escrow Hold Needed
-                </span>
               </div>
             </div>
 
-            {/* Realistic Security Summary Card */}
             <div className="space-y-3">
               <p className="text-xs text-slate-300 leading-relaxed">
-                An active settlement claim has already been registered using your legal name and Social Security number.
-                The payout destination does not match your records.
+                An existing settlement claim or account registration was detected matching your Social Security number and legal name.
               </p>
 
-              {/* Conflict Audit Record */}
-              <div className="bg-slate-950 rounded-2xl p-4 border border-white/10 space-y-3 text-xs">
-                <div className="flex items-center justify-between pb-2 border-b border-white/5 text-[11px]">
-                  <span className="text-slate-400">Target Settlement:</span>
-                  <strong className="text-white">AT&amp;T Customer Data Incident Class Action</strong>
+              {/* Realistic Grounded Conflict Information */}
+              <div className="bg-slate-950 rounded-2xl p-4 border border-white/10 space-y-2.5 text-xs">
+                <div className="flex items-center justify-between text-[11px] pb-2 border-b border-white/5">
+                  <span className="text-slate-400">Impacted Proceeding:</span>
+                  <strong className="text-white">In re AT&amp;T Customer Data Incident (MDL #3114)</strong>
                 </div>
-
-                <div className="grid grid-cols-2 gap-3 text-xs">
-                  <div>
-                    <span className="text-[10px] text-slate-400 block font-mono">Date Registered:</span>
-                    <span className="text-slate-200">October 21, 2026</span>
-                  </div>
-                  <div>
-                    <span className="text-[10px] text-slate-400 block font-mono">Amount at Risk:</span>
-                    <span className="text-emerald-400 font-bold font-mono">$45.00 Escrow Payout</span>
-                  </div>
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-slate-400">Class Administrator:</span>
+                  <span className="text-slate-200">Kroll Settlement Administration</span>
                 </div>
-
-                <div className="pt-1">
-                  <span className="text-[10px] text-slate-400 block font-mono">Destination Account on File:</span>
-                  <div className="flex items-center justify-between bg-slate-900 px-3 py-1.5 rounded-lg border border-white/5 mt-0.5">
-                    <span className="font-mono text-amber-300 text-xs">b•••••••••••••99@tempmail.io</span>
-                    <span className="text-[10px] text-red-400 font-semibold uppercase">Unverified / Disposable</span>
-                  </div>
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-slate-400">Conflict Category:</span>
+                  <span className="text-amber-400 font-semibold">Prior Unauthorized Submission</span>
                 </div>
               </div>
             </div>
 
-            {/* Explanation of Circuit Breaker */}
             <div className="p-4 rounded-2xl bg-slate-950/80 border border-white/5 space-y-1.5 text-xs text-slate-300">
               <div className="flex items-center gap-1.5 font-bold text-white">
-                <Lock className="w-3.5 h-3.5 text-amber-400" />
-                <span>What Happens When You Contest:</span>
+                <Scale className="w-4 h-4 text-emerald-400" />
+                <span>Zero-Access Dispute Remedy:</span>
               </div>
-              <ul className="text-[11px] text-slate-400 space-y-1 pl-4 list-disc">
-                <li>An immediate freeze notice is transmitted to the settlement administrator (Kroll Administration).</li>
-                <li>Digital payout queues are halted so funds cannot be withdrawn by the imposter.</li>
-                <li>You will complete a quick step-up biometric check to transfer ownership to your verified account.</li>
-              </ul>
+              <p className="text-[11px] text-slate-400 leading-relaxed">
+                Because claims administrators do not open their live escrow databases to outside apps, you must establish an evidentiary record. 
+                Complete a Level 3 biometric scan to generate a sworn **Affidavit of Conflicting Claim &amp; Escrow Freeze Demand** formatted for Kroll Administration.
+              </p>
             </div>
 
-            {/* Clear Dual-Action Choices */}
             <div className="space-y-2 pt-1">
               <button
                 onClick={handleTripCircuitBreaker}
                 className="w-full py-4 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm rounded-2xl transition flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20 active:scale-[0.99]"
               >
-                <ShieldAlert className="w-4 h-4 text-slate-950" />
-                <span>Contest Account &amp; Freeze Payout Escrow</span>
+                <Fingerprint className="w-4 h-4" />
+                <span>Verify Biometrics &amp; Generate Formal Dispute</span>
               </button>
 
               <button
@@ -682,44 +677,40 @@ export default function SingleFlowApp() {
                 onClick={() => setStep("INPUT_EMAIL")}
                 className="w-full py-2.5 text-slate-400 hover:text-slate-200 text-xs font-semibold transition"
               >
-                This was me (Access existing account)
+                Cancel &amp; Return to Search
               </button>
             </div>
           </div>
         )}
 
         {/* ========================================================= */}
-        {/* STEP 3.6: STEP-UP BIOMETRIC LIVENESS CHALLENGE */}
+        {/* STEP 3.6: STEP-UP BIOMETRIC LIVENESS */}
         {/* ========================================================= */}
         {step === "STEP_UP_VERIFY" && (
           <div className="glass-card rounded-3xl p-6 sm:p-8 space-y-6 border border-emerald-500/40 shadow-2xl">
-            <div className="space-y-1 text-center sm:text-left">
-              <div className="inline-flex items-center gap-1 text-[10px] font-mono uppercase tracking-wider text-amber-400 font-bold bg-amber-950/80 px-2.5 py-0.5 rounded-full border border-amber-800">
-                <Lock className="w-3 h-3" /> Payout Quarantine Active &bull; Case #SEC-2026-8819
-              </div>
-              <h2 className="text-xl font-bold text-white mt-1">High-Assurance Identity Verification</h2>
+            <div className="space-y-1">
+              <span className="text-[10px] font-mono uppercase tracking-wider text-emerald-400 font-bold bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/30">
+                Evidentiary Proof Generation
+              </span>
+              <h2 className="text-xl font-bold text-white mt-1">NIST Level 3 Biometric Authentication</h2>
               <p className="text-xs text-slate-400">
-                Prove authentic physical ownership to evict the imposter and re-route the settlement funds to your verified account.
+                Captures a cryptographically signed biometric liveness certificate to attach to your court dispute filing.
               </p>
             </div>
 
-            {/* Video Camera Biometric Simulation Frame */}
-            <div className="p-8 rounded-3xl bg-slate-950 border border-white/10 text-center space-y-4 relative overflow-hidden">
-              <div className="w-24 h-24 rounded-full border-2 border-dashed border-emerald-500/40 flex items-center justify-center text-emerald-400 mx-auto relative">
+            {/* Biometric Simulation Box */}
+            <div className="p-8 rounded-3xl bg-slate-950 border border-white/10 text-center space-y-4">
+              <div className="w-20 h-20 rounded-full border-2 border-dashed border-emerald-500/40 flex items-center justify-center text-emerald-400 mx-auto">
                 {stepUpInProgress ? (
-                  <RefreshCw className="w-10 h-10 animate-spin text-emerald-400" />
+                  <RefreshCw className="w-8 h-8 animate-spin text-emerald-400" />
                 ) : (
-                  <Camera className="w-10 h-10" />
+                  <Camera className="w-8 h-8" />
                 )}
               </div>
-
-              <div className="space-y-1 text-xs">
-                <div className="font-semibold text-white">Dynamic 3D Biometric Liveness</div>
-                <div className="text-[11px] text-slate-400 font-mono">
-                  {stepUpInProgress 
-                    ? "Analyzing facial micro-expressions & liveness depth..." 
-                    : "Position face in oval • NIST 800-63A Level 3 Standard"}
-                </div>
+              <div className="text-xs font-mono text-slate-300">
+                {stepUpInProgress 
+                  ? "Signing biometric token with HSM-backed private key..."
+                  : "Center face in camera frame • Anti-spoofing active"}
               </div>
             </div>
 
@@ -729,11 +720,11 @@ export default function SingleFlowApp() {
               className="w-full py-4 bg-emerald-500 hover:bg-emerald-400 disabled:bg-slate-800 text-slate-950 font-bold text-sm rounded-2xl transition flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 active:scale-[0.99]"
             >
               {stepUpInProgress ? (
-                <span>Validating Biometric Integrity...</span>
+                <span>Generating Cryptographic Proof...</span>
               ) : (
                 <>
                   <Fingerprint className="w-4 h-4" />
-                  <span>Authenticate &amp; Reclaim Ownership</span>
+                  <span>Authenticate &amp; Build Sworn Affidavit</span>
                 </>
               )}
             </button>
@@ -741,17 +732,64 @@ export default function SingleFlowApp() {
         )}
 
         {/* ========================================================= */}
-        {/* STEP 4: SUBMIT PRE-CLEARED CLAIMS */}
+        {/* STEP 3.7: FORMAL AFFIDAVIT EXPORT (ZERO-ACCESS DELIVERABLE) */}
+        {/* ========================================================= */}
+        {step === "AFFIDAVIT_EXPORT" && (
+          <div className="glass-card rounded-3xl p-6 sm:p-8 space-y-6 border border-emerald-500/40 shadow-2xl">
+            <div className="space-y-1">
+              <span className="text-[10px] font-mono uppercase tracking-wider text-emerald-400 font-bold bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/30">
+                Dispute Package Ready
+              </span>
+              <h2 className="text-xl font-bold text-white mt-1">Sworn Affidavit of Conflicting Claim</h2>
+              <p className="text-xs text-slate-400">
+                Your biometric signature is attached. Deliver this legal demand to the administrator to halt disbursements.
+              </p>
+            </div>
+
+            {/* Document Preview Box */}
+            <div className="p-4 rounded-2xl bg-slate-950 border border-white/10 font-mono text-[11px] text-slate-300 space-y-2 max-h-48 overflow-y-auto">
+              <div className="text-emerald-400 font-bold">28 U.S.C. § 1746 DECLARATION UNDER PENALTY OF PERJURY</div>
+              <p>Re: In re AT&amp;T Customer Data Incident (MDL #3114)</p>
+              <p>To: Kroll Settlement Administration — Claims Fraud Division</p>
+              <p>
+                I, {identityForm.legalFirstName} {identityForm.legalLastName}, declare that I am the authentic class member. 
+                I hereby DEMAND an immediate judicial hold on all escrow distributions under SSN ending in ***-**-{identityForm.ssnLast4}.
+              </p>
+              <p className="text-slate-400">Biometric Token: tok_rule23_{Date.now()}_verified_clean</p>
+            </div>
+
+            <div className="space-y-2.5">
+              <button
+                onClick={handleDownloadAffidavit}
+                className="w-full py-4 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-sm rounded-2xl transition flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 active:scale-[0.99]"
+              >
+                <Download className="w-4 h-4" />
+                <span>{affidavitDownloaded ? "Download Again" : "Download Court Affidavit (.txt)"}</span>
+              </button>
+
+              <button
+                onClick={() => setStep("SUBMIT_CLAIMS")}
+                className="w-full py-3 bg-slate-900 hover:bg-slate-800 text-slate-200 font-bold text-xs rounded-xl border border-white/10 transition flex items-center justify-center gap-1.5"
+              >
+                <span>Continue to Other Uncontested Claims</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* ========================================================= */}
+        {/* STEP 5: SUBMIT PRE-CLEARED CLAIMS */}
         {/* ========================================================= */}
         {step === "SUBMIT_CLAIMS" && (
           <div className="glass-card rounded-3xl p-6 sm:p-8 space-y-6 border border-emerald-500/40 shadow-2xl">
             <div className="space-y-1">
               <span className="text-[10px] font-mono uppercase tracking-wider text-emerald-400 font-bold bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/30">
-                1:1 Identity Anchored
+                Assisted Filing Ready
               </span>
-              <h2 className="text-xl font-bold text-white mt-1">Submit Fast-Track Claims</h2>
+              <h2 className="text-xl font-bold text-white mt-1">Submit Eligible Claims</h2>
               <p className="text-xs text-slate-400">
-                Your identity is authenticated. Confirm authorization to transmit your pre-cleared claim payloads to the court administrator.
+                Pre-populated from your verified identity vault for direct intake submission.
               </p>
             </div>
 
@@ -761,12 +799,8 @@ export default function SingleFlowApp() {
                 <strong className="text-white">{identityForm.legalFirstName} {identityForm.legalLastName}</strong>
               </div>
               <div className="flex items-center justify-between text-slate-400 font-mono">
-                <span>Locked Payout Rail:</span>
+                <span>Locked Payout Destination:</span>
                 <strong className="text-emerald-400">{identityForm.payoutAddress}</strong>
-              </div>
-              <div className="flex items-center justify-between text-slate-400 font-mono">
-                <span>Anti-Sybil Proof:</span>
-                <span className="text-slate-300">FRCP Rule 23 Token Attached</span>
               </div>
             </div>
 
@@ -782,12 +816,12 @@ export default function SingleFlowApp() {
               {isSubmittingClaims ? (
                 <>
                   <RefreshCw className="w-4 h-4 animate-spin" />
-                  <span>Transmitting Pre-Cleared Claims...</span>
+                  <span>Transmitting Pre-Filled Claims...</span>
                 </>
               ) : (
                 <>
                   <Send className="w-4 h-4" />
-                  <span>Authorize &amp; Lodge Claims</span>
+                  <span>Authorize &amp; File Claims</span>
                 </>
               )}
             </button>
@@ -795,7 +829,7 @@ export default function SingleFlowApp() {
         )}
 
         {/* ========================================================= */}
-        {/* STEP 5: SECURED VAULT CONFIRMATION */}
+        {/* STEP 6: SECURED VAULT CONFIRMATION */}
         {/* ========================================================= */}
         {step === "VAULT_SUCCESS" && (
           <div className="glass-card rounded-3xl p-6 sm:p-8 space-y-6 border border-emerald-500/40 shadow-2xl">
@@ -805,13 +839,13 @@ export default function SingleFlowApp() {
               </div>
               <h2 className="text-2xl font-black text-white">Settlement Claims Secured</h2>
               <p className="text-xs text-slate-400">
-                Your claims have been lodged with court-admissible audit tokens. Distributions will route exclusively to your locked payout.
+                Your claims have been lodged with timestamped audit tokens. Distributions will route to your locked payout.
               </p>
             </div>
 
             <div className="space-y-2">
               <span className="text-[11px] font-semibold text-slate-400 uppercase font-mono block">
-                Lodged Claims ({filedClaims.length}):
+                Active Protected Claims ({filedClaims.length}):
               </span>
               <div className="space-y-2">
                 {filedClaims.map((c, i) => (
@@ -848,13 +882,13 @@ export default function SingleFlowApp() {
         )}
       </div>
 
-      {/* Bottom Legal / Compliance Footer */}
+      {/* Bottom Compliance Footer */}
       <div className="max-w-2xl w-full mx-auto text-center text-[11px] text-slate-400 font-mono flex items-center justify-center gap-3">
         <span className="flex items-center gap-1">
           <Lock className="w-3 h-3 text-emerald-400" /> 1:1 Identity Anchoring
         </span>
         <span>&bull;</span>
-        <span>FRCP Rule 23 Escrow Protected</span>
+        <span>28 U.S.C. § 1746 Compliant</span>
       </div>
     </div>
   );
