@@ -5,7 +5,7 @@ import { DisputeEngine } from "../lib/disputeEngine";
 
 describe("ClaimShield Core Security & Anti-Sybil Test Suite", () => {
   beforeEach(() => {
-    // Clean test state can be verified against active DB instance
+    db.resetSimulationFixtures();
   });
 
   describe("1. Strict 1:1 Identity Anchoring & Sybil Resistance", () => {
@@ -62,13 +62,23 @@ describe("ClaimShield Core Security & Anti-Sybil Test Suite", () => {
     });
 
     it("should reject reuse of an existing locked payout destination (PAYOUT_COLLISION)", () => {
+      IdentityEngine.verifyAndRegister({
+        legalFirstName: "OwnerOne",
+        legalLastName: "PayoutUser",
+        dob: "1991-02-02",
+        ssnLast4: "4411",
+        payoutType: "PAYPAL",
+        payoutAddress: "locked_shared@example.com",
+        primaryEmail: "owner1@example.com"
+      });
+
       const result = IdentityEngine.verifyAndRegister({
         legalFirstName: "Different",
         legalLastName: "Person",
         dob: "1995-01-01",
         ssnLast4: "3322",
         payoutType: "PAYPAL",
-        payoutAddress: "alice.real@example.com", // already locked to TestAlice
+        payoutAddress: "locked_shared@example.com", // already locked to OwnerOne
         primaryEmail: "different@example.com"
       });
 
@@ -161,9 +171,44 @@ describe("ClaimShield Core Security & Anti-Sybil Test Suite", () => {
     });
 
     it("should successfully resolve dispute upon Step-Up verification and blacklist fraudster", () => {
-      const disputes = db.getDisputes().filter(d => d.status === "FROZEN_PENDING_STEP_UP");
-      expect(disputes.length).toBeGreaterThan(0);
-      const targetDispute = disputes[0];
+      // Create a dispute to resolve
+      const reg = IdentityEngine.verifyAndRegister({
+        legalFirstName: "VictimTwo",
+        legalLastName: "TargetTwo",
+        dob: "1982-06-20",
+        ssnLast4: "1122",
+        payoutType: "PAYPAL",
+        payoutAddress: "burner_imposter@tempmail.io",
+        primaryEmail: "victim2.breached@example.com"
+      });
+      const incumbent = reg.claimant!;
+
+      db.addClaim({
+        id: "claim-dispute-target-2",
+        settlementId: "sett-att-2024",
+        claimantId: incumbent.id,
+        qualifyingAlias: "victim2.breached@example.com",
+        payoutAddress: "burner_imposter@tempmail.io",
+        riskScore: 0.75,
+        status: "HIJACK_SUSPECT",
+        flags: ["SUSPICIOUS_PAYOUT_DOMAIN"],
+        submissionSpeedSec: 1.2,
+        ipAddress: "198.51.100.1",
+        isDatacenter: true,
+        submittedAt: new Date().toISOString()
+      });
+
+      const disputeResult = DisputeEngine.triggerDispute({
+        contestedPersonHash: incumbent.uniquePersonHash,
+        appellantFirstName: "VictimTwo",
+        appellantLastName: "TargetTwo",
+        appellantDob: "1982-06-20",
+        appellantSsnLast4: "1122",
+        appellantEmail: "victim2.real@gmail.com",
+        appellantPayoutAddress: "victim2.real@gmail.com"
+      });
+
+      const targetDispute = disputeResult.dispute;
 
       const resolution = DisputeEngine.resolveAppealWithStepUp(
         targetDispute.id,
@@ -178,13 +223,13 @@ describe("ClaimShield Core Security & Anti-Sybil Test Suite", () => {
       expect(db.isBlacklisted("burner_imposter@tempmail.io")).toBe(true);
 
       // Verify reclaimed claimant has updated verified payout
-      expect(resolution.reclaimedClaimant.lockedPayoutAddress).toBe("victim.real@gmail.com");
+      expect(resolution.reclaimedClaimant.lockedPayoutAddress).toBe("victim2.real@gmail.com");
       expect(resolution.reclaimedClaimant.kycStatus).toBe("VERIFIED");
 
       // Verify frozen claims were un-frozen and re-routed
       const claims = db.getClaimsForClaimant(resolution.reclaimedClaimant.id);
       expect(claims.every(c => c.status === "VERIFIED_CLEAN")).toBe(true);
-      expect(claims.every(c => c.payoutAddress === "victim.real@gmail.com")).toBe(true);
+      expect(claims.every(c => c.payoutAddress === "victim2.real@gmail.com")).toBe(true);
     });
   });
 
@@ -223,6 +268,38 @@ describe("ClaimShield Core Security & Anti-Sybil Test Suite", () => {
       expect(humanScore.riskScore).toBeLessThan(0.20);
       expect(humanScore.status).toBe("VERIFIED_CLEAN");
       expect(humanScore.flags).toHaveLength(0);
+    });
+  });
+
+  describe("5. Simulation Scenarios & Bot Influx Engine", () => {
+    it("should generate a synthetic wave of Sybil bot claims flagged under Rule 23", () => {
+      const initialClaimsCount = db.getClaims().length;
+      const botWave = db.simulateBotAttackWave(10);
+
+      expect(botWave).toHaveLength(10);
+      expect(db.getClaims().length).toBe(initialClaimsCount + 10);
+      
+      for (const botClaim of botWave) {
+        expect(botClaim.status).toBe("FLAGGED_BOT");
+        expect(botClaim.riskScore).toBeGreaterThanOrEqual(0.80);
+        expect(botClaim.isDatacenter).toBe(true);
+        expect(botClaim.flags).toContain("DATACENTER_PROXY_IP");
+        expect(botClaim.flags).toContain("SUPERHUMAN_SUBMISSION_SPEED");
+      }
+    });
+
+    it("should cleanly reset simulation state to baseline fixtures", () => {
+      db.simulateBotAttackWave(5);
+      db.resetSimulationFixtures();
+
+      const claims = db.getClaims();
+      const claimants = db.getClaimants();
+
+      // Demo baseline fixtures exist
+      expect(claimants.some(c => c.legalLastName === "Miller")).toBe(true);
+      expect(claims.length).toBeGreaterThan(0);
+      // Ensure no leftover mass bot waves
+      expect(claims.filter(c => c.id.startsWith("claim-bot-sybil")).length).toBe(0);
     });
   });
 });

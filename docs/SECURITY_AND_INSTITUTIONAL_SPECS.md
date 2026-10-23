@@ -1,10 +1,8 @@
-# ClaimShield: Security Architecture, Pitch Blueprint & Business Outreach Directory
+# ClaimShield: Security Architecture, Institutional Framework & Business Outreach Directory
 
 ---
 
 ## 1. Executive Summary
-**ClaimShield** is a dual-sided trust network designed to solve the \$1.4B+ settlement fraud and identity hijacking crisis in class action litigation.
-
 * **For Consumers**: An exposure tracker and legal claims vault that matches victims to active payouts, locks their identity to prevent fraud rings from claiming money in their name, and provides an instant circuit-breaker appeal process if compromised.
 * **For Settlement Administrators & Class Counsel**: An enterprise anti-fraud and identity verification suite providing real-time pre-clearance scoring, Sybil-proof duplicate prevention, and court-admissible Federal Rule of Civil Procedure (FRCP) Rule 23 audit trails.
 
@@ -32,19 +30,19 @@ To enforce strictly one account per living human without storing plaintext Socia
 
 ---
 
-## 3. The Proposal: Consumer vs. B2B
+## 3. The Institutional Proposal: Consumer vs. Enterprise
 
-### A. The Consumer Pitch ("The Payout Shield")
+### A. Consumer Value Proposition ("The Payout Shield")
 * **Headline**: *"Your data was leaked. Don't let bot rings steal your court-approved settlement payouts."*
 * **Core Value**:
   1. Free exposure scan and pre-matched settlement filings.
   2. 60-second 1-click claim filing (no deciphering legal PDFs).
   3. **Identity Shield**: Guaranteed that no scammer can cash in on your breach.
 
-### B. The Enterprise Pitch to Settlement Administrators
+### B. Enterprise Value Proposition for Settlement Administrators
 * **Headline**: *"Eliminate 70%+ bot claims, cut audit labor by 80%, and submit court-admissible distribution audits under FRCP Rule 23."*
 * **Core Value Drivers**:
-  1. **Win Competitive RFPs**: Administrators pitch ClaimShield integration to federal judges and Class Counsel to prove their distribution cannot be diluted by bot syndicates.
+  1. **Win Competitive RFPs**: Administrators incorporate ClaimShield verification to demonstrate to federal judges and Class Counsel that distributions cannot be diluted by bot syndicates.
   2. **Audit Labor Reduction**: Replaces weeks of manual postcard dispute letters with automated 3-minute digital appeals.
   3. **Escrow Protection**: Ensures pro-rata distribution pots deliver maximum dollars to genuine class members.
 
@@ -77,10 +75,10 @@ These law firms draft settlement agreements and select the administrators:
 
 ## 5. Strategic Roadmap: Next Crucial Milestone
 
-To make ClaimShield immediately pitch-able to an executive at Epiq or Angeion:
+To demonstrate immediate enterprise readiness to an executive at Epiq or Angeion:
 * **The "Drop-in Verified Settlement Widget" (Client SDK / Hosted Iframe)**:
-  * When administrators host a settlement website (e.g. `ticketmastersettlement.com`), their web developers just want a single line of script:
-    `<script src="https://claimshield.io/sdk.js" data-settlement="sett-tm-2024"></script>`
+  * When administrators host a settlement website (e.g. `/portal/demo-settlement`), their web developers just want a single line of script:
+    `<script src="/sdk.js" data-settlement="sett-tm-2024"></script>`
   * This renders a clean **"⚡ Fast-Track Claim with ClaimShield"** button right on their official form.
   * Clicking it authenticates the user, pre-fills verified credentials, and passes a cryptographic verification token to the administrator's backend.
-  * This visual proof-of-concept makes the platform an instant "yes" in an executive pitch meeting.
+  * This visual proof-of-concept makes the platform an immediate operational fit during executive evaluations.

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { 
   ShieldCheck, 
@@ -24,6 +24,7 @@ import {
   Printer,
   Scale
 } from "lucide-react";
+import { CourtAffidavitModal } from "@/components/CourtAffidavitModal";
 
 interface Settlement {
   id: string;
@@ -79,10 +80,53 @@ export default function SingleFlowApp() {
   const [disputeId, setDisputeId] = useState("");
   const [stepUpInProgress, setStepUpInProgress] = useState(false);
   const [affidavitDownloaded, setAffidavitDownloaded] = useState(false);
+  const [showAffidavitModal, setShowAffidavitModal] = useState(false);
 
   // Step 4: Claims State
   const [filedClaims, setFiledClaims] = useState<any[]>([]);
   const [isSubmittingClaims, setIsSubmittingClaims] = useState(false);
+
+  useEffect(() => {
+    const runScenario = (scenario: string) => {
+      if (scenario === "robert") {
+        setIdentityForm({
+          legalFirstName: "Robert",
+          legalLastName: "Miller",
+          dob: "1985-11-20",
+          ssnLast4: "8899",
+          payoutAddress: "robert.miller.real@gmail.com"
+        });
+        handleStartScan("robert.miller@gmail.com");
+      } else if (scenario === "clean") {
+        setIdentityForm({
+          legalFirstName: "Sarah",
+          legalLastName: "Jenkins",
+          dob: "1994-08-22",
+          ssnLast4: "5512",
+          payoutAddress: "sarah.jenkins.verified@outlook.com"
+        });
+        handleStartScan("sarah.jenkins@outlook.com");
+      }
+    };
+
+    // Check query params on mount
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const scenarioParam = params.get("scenario");
+      if (scenarioParam) {
+        runScenario(scenarioParam);
+      }
+    }
+
+    const handler = (e: any) => {
+      if (e?.detail?.scenario) {
+        runScenario(e.detail.scenario);
+      }
+    };
+
+    window.addEventListener("claimshield:load-scenario", handler);
+    return () => window.removeEventListener("claimshield:load-scenario", handler);
+  }, []);
 
   // -------------------------------------------------------------
   // STEP 1 -> STEP 2: RUN BREACH SCAN
@@ -755,21 +799,29 @@ Audit Token: tok_rule23_${Date.now()}_dispute_freeze
                 I, {identityForm.legalFirstName} {identityForm.legalLastName}, declare that I am the authentic class member. 
                 I hereby DEMAND an immediate judicial hold on all escrow distributions under SSN ending in ***-**-{identityForm.ssnLast4}.
               </p>
-              <p className="text-slate-400">Biometric Token: tok_rule23_{Date.now()}_verified_clean</p>
+              <p className="text-slate-400">Biometric Token: tok_rule23_{disputeId || "bio_seal_9042"}</p>
             </div>
 
             <div className="space-y-2.5">
               <button
-                onClick={handleDownloadAffidavit}
+                onClick={() => setShowAffidavitModal(true)}
                 className="w-full py-4 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-sm rounded-2xl transition flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 active:scale-[0.99]"
               >
-                <Download className="w-4 h-4" />
-                <span>{affidavitDownloaded ? "Download Again" : "Download Court Affidavit (.txt)"}</span>
+                <Scale className="w-4 h-4" />
+                <span>View Official Court Pleading &amp; Print PDF</span>
+              </button>
+
+              <button
+                onClick={handleDownloadAffidavit}
+                className="w-full py-3 bg-slate-900 hover:bg-slate-800 text-slate-200 font-semibold text-xs rounded-xl border border-white/10 transition flex items-center justify-center gap-1.5"
+              >
+                <Download className="w-3.5 h-3.5 text-slate-400" />
+                <span>{affidavitDownloaded ? "Affidavit Downloaded Again (.txt)" : "Download Plain Text Pleading (.txt)"}</span>
               </button>
 
               <button
                 onClick={() => setStep("SUBMIT_CLAIMS")}
-                className="w-full py-3 bg-slate-900 hover:bg-slate-800 text-slate-200 font-bold text-xs rounded-xl border border-white/10 transition flex items-center justify-center gap-1.5"
+                className="w-full py-3 bg-slate-950 hover:bg-slate-900 text-emerald-400 hover:text-emerald-300 font-bold text-xs rounded-xl border border-emerald-500/20 transition flex items-center justify-center gap-1.5"
               >
                 <span>Continue to Other Uncontested Claims</span>
                 <ArrowRight className="w-3.5 h-3.5" />
@@ -777,6 +829,20 @@ Audit Token: tok_rule23_${Date.now()}_dispute_freeze
             </div>
           </div>
         )}
+
+        {/* Modal for Court Affidavit */}
+        <CourtAffidavitModal
+          isOpen={showAffidavitModal}
+          onClose={() => setShowAffidavitModal(false)}
+          claimantName={`${identityForm.legalFirstName} ${identityForm.legalLastName}`}
+          dob={identityForm.dob}
+          ssnLast4={identityForm.ssnLast4}
+          payoutAddress={identityForm.payoutAddress}
+          caseName="In re AT&T Customer Data Incident (MDL #3114)"
+          administratorName="Kroll Settlement Administration"
+          contestedAddress="burner_payout_syndicate99@tempmail.io"
+          auditToken={`tok_rule23_${disputeId || "bio_seal_9042"}`}
+        />
 
         {/* ========================================================= */}
         {/* STEP 5: SUBMIT PRE-CLEARED CLAIMS */}

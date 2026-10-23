@@ -1,4 +1,6 @@
 import crypto from "crypto";
+import fs from "fs";
+import path from "path";
 
 // ==========================================
 // CORE TYPES
@@ -15,7 +17,7 @@ export interface Settlement {
   estimatedBasePayout: number;
   maxDocumentedLoss: number;
   officialClaimUrl: string;
-  eligibleDomains: string[]; // e.g. ['ticketmaster.com', 'livenation.com']
+  eligibleDomains: string[];
   description: string;
 }
 
@@ -31,6 +33,7 @@ export interface Claimant {
   lockedPayoutAddress: string;
   lockedPayoutHash: string;
   isBannedFraudster?: boolean;
+  isDemo?: boolean;
   createdAt: string;
 }
 
@@ -49,12 +52,13 @@ export interface SettlementClaim {
   claimantId: string;
   qualifyingAlias: string;
   payoutAddress: string;
-  riskScore: number; // 0.00 to 1.00
+  riskScore: number;
   status: "VERIFIED_CLEAN" | "FLAGGED_BOT" | "HIJACK_SUSPECT" | "FROZEN_DISPUTE";
   flags: string[];
   submissionSpeedSec: number;
   ipAddress: string;
   isDatacenter: boolean;
+  isDemo?: boolean;
   submittedAt: string;
 }
 
@@ -88,7 +92,7 @@ export interface BreachRecord {
 }
 
 // ==========================================
-// SEED DATA
+// EXPANDED REAL-WORLD ACTIVE SETTLEMENTS (2024 - 2026)
 // ==========================================
 
 export const INITIAL_SETTLEMENTS: Settlement[] = [
@@ -147,6 +151,62 @@ export const INITIAL_SETTLEMENTS: Settlement[] = [
     officialClaimUrl: "/portal/demo-settlement?id=sett-change-2024",
     eligibleDomains: ["changehealthcare.com", "optum.com"],
     description: "Massive medical claims clearinghouse cyberattack exposing diagnoses, prescriptions, and insurance IDs."
+  },
+  {
+    id: "sett-roku-2024",
+    caseName: "Roku Customer Account Security Breach Litigation",
+    defendant: "Roku Inc.",
+    administratorName: "Simpluris Inc.",
+    incidentYear: 2024,
+    claimDeadline: "2026-11-15",
+    status: "OPEN",
+    estimatedBasePayout: 25.00,
+    maxDocumentedLoss: 1500,
+    officialClaimUrl: "/portal/demo-settlement?id=sett-roku-2024",
+    eligibleDomains: ["roku.com"],
+    description: "Credential stuffing compromising 591,000 accounts with unauthorized subscription purchases."
+  },
+  {
+    id: "sett-moveit-2023",
+    caseName: "In re MoveIT Transfer Customer Data Security Incident",
+    defendant: "Progress Software Corporation",
+    administratorName: "Epiq Systems Inc.",
+    incidentYear: 2023,
+    claimDeadline: "2026-12-31",
+    status: "OPEN",
+    estimatedBasePayout: 65.00,
+    maxDocumentedLoss: 8000,
+    officialClaimUrl: "/portal/demo-settlement?id=sett-moveit-2023",
+    eligibleDomains: ["progress.com", "moveit.com"],
+    description: "CL0P ransomware SQL injection affecting corporate and pension systems across 60M individuals."
+  },
+  {
+    id: "sett-dell-2024",
+    caseName: "Dell Customer Portal Data Incident Settlement",
+    defendant: "Dell Technologies Inc.",
+    administratorName: "Kroll Settlement Administration",
+    incidentYear: 2024,
+    claimDeadline: "2027-02-28",
+    status: "OPEN",
+    estimatedBasePayout: 30.00,
+    maxDocumentedLoss: 2000,
+    officialClaimUrl: "/portal/demo-settlement?id=sett-dell-2024",
+    eligibleDomains: ["dell.com"],
+    description: "Scraped API database containing physical addresses, purchase orders, and customer service tags."
+  },
+  {
+    id: "sett-tmobile-2023",
+    caseName: "T-Mobile Customer Data Incident Class Action Settlement",
+    defendant: "T-Mobile US Inc.",
+    administratorName: "Kroll Settlement Administration",
+    incidentYear: 2023,
+    claimDeadline: "2026-10-30",
+    status: "OPEN",
+    estimatedBasePayout: 35.00,
+    maxDocumentedLoss: 3000,
+    officialClaimUrl: "/portal/demo-settlement?id=sett-tmobile-2023",
+    eligibleDomains: ["t-mobile.com", "sprint.com"],
+    description: "API exploit accessing names, billing addresses, phone numbers, and account line features."
   }
 ];
 
@@ -186,12 +246,51 @@ export const INITIAL_BREACH_RECORDS: BreachRecord[] = [
     exposedData: ["Medical Diagnoses", "Insurance Policy #", "SSN", "Billing Info"],
     description: "BlackCat/ALPHV ransomware exfiltration of US nationwide health data.",
     matchingSettlementId: "sett-change-2024"
+  },
+  {
+    id: "breach-roku-2024",
+    entityName: "Roku Streaming Accounts",
+    domain: "roku.com",
+    breachDate: "April 2024",
+    exposedData: ["Payment Method", "Account Credentials", "Viewing History", "Name"],
+    description: "Credential stuffing compromising 591,000 active customer profiles.",
+    matchingSettlementId: "sett-roku-2024"
+  },
+  {
+    id: "breach-moveit-2023",
+    entityName: "MoveIT Transfer / Progress Software",
+    domain: "progress.com",
+    breachDate: "June 2023",
+    exposedData: ["Corporate Records", "SSN", "Payroll Data", "Banking Info"],
+    description: "Zero-day vulnerability exploit exfiltrating government and financial data.",
+    matchingSettlementId: "sett-moveit-2023"
+  },
+  {
+    id: "breach-dell-2024",
+    entityName: "Dell Customer Portal",
+    domain: "dell.com",
+    breachDate: "May 2024",
+    exposedData: ["Customer Name", "Shipping Address", "Hardware Specs", "Order Dates"],
+    description: "Unauthorized API exfiltration compromising 49 million purchase records.",
+    matchingSettlementId: "sett-dell-2024"
+  },
+  {
+    id: "breach-tmobile-2023",
+    entityName: "T-Mobile Telecom",
+    domain: "t-mobile.com",
+    breachDate: "January 2023",
+    exposedData: ["Phone Number", "Billing Address", "Account #", "Rate Plans"],
+    description: "Malicious API activity exfiltrating data on 37 million prepaid and postpaid accounts.",
+    matchingSettlementId: "sett-tmobile-2023"
   }
 ];
 
 // ==========================================
-// IN-MEMORY / PERSISTED DATABASE SINGLETON
+// PERSISTENT DATA STORE (WITH DEMO RESET)
 // ==========================================
+
+const STORAGE_DIR = path.join(process.cwd(), "data");
+const STORAGE_FILE = path.join(STORAGE_DIR, "store.json");
 
 class DataStore {
   private settlements: Settlement[] = [...INITIAL_SETTLEMENTS];
@@ -200,14 +299,51 @@ class DataStore {
   private aliases: ClaimantAlias[] = [];
   private claims: SettlementClaim[] = [];
   private disputes: IdentityDispute[] = [];
-  private blacklist: Set<string> = new Set(); // blacklisted payout hashes / emails
+  private blacklist: Set<string> = new Set();
 
   constructor() {
-    this.seedDemoClaimantAndBots();
+    this.loadFromDisk();
+    if (this.claimants.length === 0) {
+      this.seedDemoClaimantAndBots();
+      this.saveToDisk();
+    }
   }
 
-  // Pre-seed an impersonator demo case so the user can test the dispute/appeal immediately!
-  private seedDemoClaimantAndBots() {
+  private loadFromDisk() {
+    try {
+      if (fs.existsSync(STORAGE_FILE)) {
+        const raw = fs.readFileSync(STORAGE_FILE, "utf-8");
+        const parsed = JSON.parse(raw);
+        if (parsed.claimants) this.claimants = parsed.claimants;
+        if (parsed.aliases) this.aliases = parsed.aliases;
+        if (parsed.claims) this.claims = parsed.claims;
+        if (parsed.disputes) this.disputes = parsed.disputes;
+        if (parsed.blacklist) this.blacklist = new Set(parsed.blacklist);
+      }
+    } catch (e) {
+      console.warn("Could not load store from disk, initializing fresh", e);
+    }
+  }
+
+  private saveToDisk() {
+    try {
+      if (!fs.existsSync(STORAGE_DIR)) {
+        fs.mkdirSync(STORAGE_DIR, { recursive: true });
+      }
+      const state = {
+        claimants: this.claimants,
+        aliases: this.aliases,
+        claims: this.claims,
+        disputes: this.disputes,
+        blacklist: Array.from(this.blacklist)
+      };
+      fs.writeFileSync(STORAGE_FILE, JSON.stringify(state, null, 2), "utf-8");
+    } catch (e) {
+      console.warn("Could not save store to disk", e);
+    }
+  }
+
+  public seedDemoClaimantAndBots() {
     // 1. Legitimate anchor for demo user "Jane Doe"
     const janeHash = this.computePersonHash("Jane", "Doe", "1990-05-14", "4321");
     const janePayoutHash = this.computePayoutHash("PAYPAL", "janedoe.real@gmail.com");
@@ -223,6 +359,7 @@ class DataStore {
       lockedPayoutType: "PAYPAL",
       lockedPayoutAddress: "janedoe.real@gmail.com",
       lockedPayoutHash: janePayoutHash,
+      isDemo: true,
       createdAt: new Date(Date.now() - 86400000 * 5).toISOString()
     };
     this.claimants.push(jane);
@@ -235,17 +372,8 @@ class DataStore {
       isVerified: true,
       verifiedAt: new Date(Date.now() - 86400000 * 5).toISOString()
     });
-    this.aliases.push({
-      id: "alias-jane-2",
-      claimantId: jane.id,
-      aliasType: "EMAIL",
-      aliasValue: "j.doe@college.alumni.edu",
-      isVerified: true,
-      verifiedAt: new Date(Date.now() - 86400000 * 4).toISOString()
-    });
 
-    // 2. Pre-seed an impersonated victim: "Robert Miller"
-    // An identity theft bot created this account using Robert's leaked info and routed to a burner PayPal!
+    // 2. Demonstration victim: "Robert Miller"
     const robertHash = this.computePersonHash("Robert", "Miller", "1985-11-20", "8899");
     const fraudPayoutHash = this.computePayoutHash("PAYPAL", "burner_payout_syndicate99@tempmail.io");
 
@@ -260,6 +388,7 @@ class DataStore {
       lockedPayoutType: "PAYPAL",
       lockedPayoutAddress: "burner_payout_syndicate99@tempmail.io",
       lockedPayoutHash: fraudPayoutHash,
+      isDemo: true,
       createdAt: new Date(Date.now() - 86400000 * 2).toISOString()
     };
     this.claimants.push(robertFake);
@@ -273,7 +402,7 @@ class DataStore {
       verifiedAt: ""
     });
 
-    // Robert's fake claim filed by the bot on AT&T Settlement
+    // Robert's conflicting claim filed on AT&T Settlement
     this.claims.push({
       id: "claim-bot-robert-1",
       settlementId: "sett-att-2024",
@@ -286,6 +415,7 @@ class DataStore {
       submissionSpeedSec: 1.2,
       ipAddress: "45.33.32.156",
       isDatacenter: true,
+      isDemo: true,
       submittedAt: new Date(Date.now() - 86400000 * 2).toISOString()
     });
 
@@ -302,8 +432,74 @@ class DataStore {
       submissionSpeedSec: 42.5,
       ipAddress: "98.210.14.88",
       isDatacenter: false,
+      isDemo: true,
       submittedAt: new Date(Date.now() - 86400000 * 4).toISOString()
     });
+  }
+
+  public resetSimulationFixtures() {
+    this.claimants = [];
+    this.aliases = [];
+    this.claims = [];
+    this.disputes = [];
+    this.blacklist.clear();
+    this.seedDemoClaimantAndBots();
+    this.saveToDisk();
+  }
+
+  public simulateBotAttackWave(count: number = 20): SettlementClaim[] {
+    const botDomains = [
+      "burnermail.io", 
+      "dispostable.com", 
+      "tempmail.ninja", 
+      "guerrillamail.com", 
+      "sharklasers.com", 
+      "throwawaymail.org"
+    ];
+    const ips = [
+      "185.220.101.4", "45.33.32.12", "198.51.100.22", "162.247.74.200", "194.26.29.112",
+      "104.244.76.13", "185.220.102.8", "192.42.116.16", "23.129.64.210", "176.10.99.200"
+    ];
+    const settlements = this.settlements;
+    const generated: SettlementClaim[] = [];
+
+    for (let i = 0; i < count; i++) {
+      const sett = settlements[i % settlements.length];
+      const botDomain = botDomains[i % botDomains.length];
+      const randNum = Math.floor(1000 + Math.random() * 9000);
+      const botAlias = `harvester_bot_${randNum}@${botDomain}`;
+      const payoutDrop = `burner_drop_${randNum + 5000}@${botDomain}`;
+      const ip = ips[i % ips.length];
+      const speed = Number((0.2 + Math.random() * 1.1).toFixed(2));
+      const riskScore = Number((0.86 + Math.random() * 0.13).toFixed(2));
+
+      const newClaim: SettlementClaim = {
+        id: `claim-bot-sybil-${Date.now()}-${i}`,
+        settlementId: sett.id,
+        claimantId: `bot-actor-${randNum}`,
+        qualifyingAlias: botAlias,
+        payoutAddress: payoutDrop,
+        riskScore,
+        status: "FLAGGED_BOT",
+        flags: [
+          "SUPERHUMAN_SUBMISSION_SPEED",
+          "DATACENTER_PROXY_IP",
+          "DISPOSABLE_DOMAIN",
+          "BURST_RATE_ANOMALY"
+        ],
+        submissionSpeedSec: speed,
+        ipAddress: ip,
+        isDatacenter: true,
+        isDemo: true,
+        submittedAt: new Date(Date.now() - i * 12000).toISOString()
+      };
+
+      generated.push(newClaim);
+      this.claims.unshift(newClaim);
+    }
+
+    this.saveToDisk();
+    return generated;
   }
 
   // Cryptographic identity hashing
@@ -348,12 +544,14 @@ class DataStore {
 
   public addClaimant(claimant: Claimant): void {
     this.claimants.push(claimant);
+    this.saveToDisk();
   }
 
   public updateClaimant(id: string, updates: Partial<Claimant>): void {
     const idx = this.claimants.findIndex(c => c.id === id);
     if (idx !== -1) {
       this.claimants[idx] = { ...this.claimants[idx], ...updates };
+      this.saveToDisk();
     }
   }
 
@@ -367,6 +565,7 @@ class DataStore {
 
   public addAlias(alias: ClaimantAlias): void {
     this.aliases.push(alias);
+    this.saveToDisk();
   }
 
   public getClaims(): SettlementClaim[] {
@@ -383,6 +582,7 @@ class DataStore {
 
   public addClaim(claim: SettlementClaim): void {
     this.claims.unshift(claim);
+    this.saveToDisk();
   }
 
   public updateClaimsStatusForClaimant(claimantId: string, status: SettlementClaim["status"]): void {
@@ -391,6 +591,7 @@ class DataStore {
         c.status = status;
       }
     });
+    this.saveToDisk();
   }
 
   public getDisputes(): IdentityDispute[] {
@@ -403,17 +604,20 @@ class DataStore {
 
   public addDispute(dispute: IdentityDispute): void {
     this.disputes.unshift(dispute);
+    this.saveToDisk();
   }
 
   public updateDispute(id: string, updates: Partial<IdentityDispute>): void {
     const idx = this.disputes.findIndex(d => d.id === id);
     if (idx !== -1) {
       this.disputes[idx] = { ...this.disputes[idx], ...updates };
+      this.saveToDisk();
     }
   }
 
   public addToBlacklist(identifier: string): void {
     this.blacklist.add(identifier.toLowerCase());
+    this.saveToDisk();
   }
 
   public isBlacklisted(identifier: string): boolean {
@@ -421,7 +625,6 @@ class DataStore {
   }
 }
 
-// Global singleton across hot reloads in Next.js dev
 const globalForDb = global as unknown as { __dataStoreInstance?: DataStore };
 export const db = globalForDb.__dataStoreInstance ?? new DataStore();
 if (process.env.NODE_ENV !== "production") globalForDb.__dataStoreInstance = db;

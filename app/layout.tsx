@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/Navbar";
+import { ShowcaseDrawer } from "@/components/ShowcaseDrawer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,7 +29,8 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col bg-zinc-950 text-zinc-100 selection:bg-emerald-500 selection:text-black">
         <Navbar />
         <main className="flex-1">{children}</main>
-        <footer className="border-t border-zinc-900 bg-zinc-950 py-6 text-center text-xs text-zinc-600">
+        <ShowcaseDrawer />
+        <footer className="border-t border-zinc-900 bg-zinc-950 py-6 text-center text-xs text-zinc-600 no-print">
           ClaimShield Platform MVP &bull; Sybil-Resistant Settlement Defense &bull; 1:1 Identity Protocol
         </footer>
       </body>

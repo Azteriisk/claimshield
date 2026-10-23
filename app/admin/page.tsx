@@ -14,7 +14,8 @@ import {
   FileSpreadsheet, 
   Activity, 
   Server,
-  Lock
+  Lock,
+  Bot
 } from "lucide-react";
 
 interface Metrics {
@@ -65,6 +66,7 @@ export default function AdminPage() {
     auditToken: string;
   } | null>(null);
   const [simLoading, setSimLoading] = useState(false);
+  const [botWaveLoading, setBotWaveLoading] = useState(false);
 
   useEffect(() => {
     loadMetrics();
@@ -81,6 +83,22 @@ export default function AdminPage() {
       console.error("Failed to load admin metrics", err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleSimulateBotWave = async () => {
+    setBotWaveLoading(true);
+    try {
+      await fetch("/api/admin/simulate-bot-wave", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ count: 20 })
+      });
+      await loadMetrics();
+    } catch (err) {
+      console.error("Bot wave simulation failed", err);
+    } finally {
+      setBotWaveLoading(false);
     }
   };
 
@@ -164,13 +182,23 @@ export default function AdminPage() {
           </p>
         </div>
 
-        <div className="flex items-center gap-2.5">
+        <div className="flex flex-wrap items-center gap-2.5">
+          <button
+            onClick={handleSimulateBotWave}
+            disabled={botWaveLoading}
+            className="px-3.5 py-2.5 bg-red-950/60 hover:bg-red-900/60 border border-red-800/80 text-red-200 text-xs font-bold rounded-xl transition flex items-center gap-1.5 shadow-sm active:scale-95"
+            title="Injects 20 synthetic Sybil bot claims across federal dockets to showcase real-time Rule 23 quarantine."
+          >
+            <Bot className={`w-3.5 h-3.5 ${botWaveLoading ? "animate-spin" : "text-red-400"}`} />
+            <span>{botWaveLoading ? "Injecting Attack..." : "Simulate 20-Claim Bot Wave"}</span>
+          </button>
+
           <button
             onClick={loadMetrics}
             className="p-2.5 bg-zinc-900 border border-zinc-800 hover:bg-zinc-800 text-zinc-300 rounded-xl transition flex items-center gap-1.5 text-xs font-semibold"
           >
             <RefreshCw className="w-3.5 h-3.5" />
-            Sync Feeds
+            <span>Sync Feeds</span>
           </button>
           <button
             onClick={handleDownloadRule23Csv}

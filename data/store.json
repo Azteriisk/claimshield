@@ -1,0 +1,88 @@
+{
+  "claimants": [
+    {
+      "id": "claimant-jane-demo",
+      "uniquePersonHash": "c8b544e6dc545d711039f9ecb1f08d8d1d36b7d674d026acc0398c5faa99f8c8",
+      "legalFirstName": "Jane",
+      "legalLastName": "Doe",
+      "dob": "1990-05-14",
+      "ssnLast4": "4321",
+      "kycStatus": "VERIFIED",
+      "lockedPayoutType": "PAYPAL",
+      "lockedPayoutAddress": "janedoe.real@gmail.com",
+      "lockedPayoutHash": "eacfdcfbf557285314751b5399afc54a47cc9b4265b61f80edfbdfc05923339f",
+      "isDemo": true,
+      "createdAt": "2026-10-18T04:50:25.251Z"
+    },
+    {
+      "id": "claimant-robert-hijacked",
+      "uniquePersonHash": "e16565cb692f1380f7f105d6727f20b2afbca920506a0a06f9d829757e8d1da3",
+      "legalFirstName": "Robert",
+      "legalLastName": "Miller",
+      "dob": "1985-11-20",
+      "ssnLast4": "8899",
+      "kycStatus": "VERIFIED",
+      "lockedPayoutType": "PAYPAL",
+      "lockedPayoutAddress": "burner_payout_syndicate99@tempmail.io",
+      "lockedPayoutHash": "1fcd370d17a6107b224b155e6d686b7c8412a72ddbc0f6ed811c5a35f65848e8",
+      "isDemo": true,
+      "createdAt": "2026-10-21T04:50:25.252Z"
+    }
+  ],
+  "aliases": [
+    {
+      "id": "alias-jane-1",
+      "claimantId": "claimant-jane-demo",
+      "aliasType": "EMAIL",
+      "aliasValue": "janedoe.real@gmail.com",
+      "isVerified": true,
+      "verifiedAt": "2026-10-18T04:50:25.251Z"
+    },
+    {
+      "id": "alias-robert-fake",
+      "claimantId": "claimant-robert-hijacked",
+      "aliasType": "EMAIL",
+      "aliasValue": "robert.miller.breached@att.net",
+      "isVerified": false,
+      "verifiedAt": ""
+    }
+  ],
+  "claims": [
+    {
+      "id": "claim-bot-robert-1",
+      "settlementId": "sett-att-2024",
+      "claimantId": "claimant-robert-hijacked",
+      "qualifyingAlias": "robert.miller.breached@att.net",
+      "payoutAddress": "burner_payout_syndicate99@tempmail.io",
+      "riskScore": 0.85,
+      "status": "HIJACK_SUSPECT",
+      "flags": [
+        "PAYOUT_DIVERGENCE",
+        "DATACENTER_PROXY_IP",
+        "SUPERHUMAN_SUBMISSION_SPEED"
+      ],
+      "submissionSpeedSec": 1.2,
+      "ipAddress": "45.33.32.156",
+      "isDatacenter": true,
+      "isDemo": true,
+      "submittedAt": "2026-10-21T04:50:25.252Z"
+    },
+    {
+      "id": "claim-jane-clean-1",
+      "settlementId": "sett-tm-2024",
+      "claimantId": "claimant-jane-demo",
+      "qualifyingAlias": "janedoe.real@gmail.com",
+      "payoutAddress": "janedoe.real@gmail.com",
+      "riskScore": 0.05,
+      "status": "VERIFIED_CLEAN",
+      "flags": [],
+      "submissionSpeedSec": 42.5,
+      "ipAddress": "98.210.14.88",
+      "isDatacenter": false,
+      "isDemo": true,
+      "submittedAt": "2026-10-19T04:50:25.252Z"
+    }
+  ],
+  "disputes": [],
+  "blacklist": []
+}

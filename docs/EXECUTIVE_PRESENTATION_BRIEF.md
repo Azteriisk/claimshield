@@ -1,11 +1,11 @@
-# ClaimShield: Executive Presentation & Pitch Narrative
+# ClaimShield: Executive Briefing & Institutional Proposal
 
 ---
 
 ## Slide 1: Title & Executive Summary
 * **Headline**: ClaimShield: The Anti-Fraud & Verified Intake Layer for Class Action Settlements
 * **Subhead**: Eradicating Bot Fraud, Slashing Dispute Overhead, and Maximizing Payouts for Legitimate Claimants.
-* **Presenters**: Founders, ClaimShield
+* **Presenters**: Leadership, ClaimShield
 * **Audience**: Settlement Administrators (Epiq, Kroll, Angeion, JND) & Plaintiffs' Class Counsel (Edelson PC, Lieff Cabraser)
 
 ---
